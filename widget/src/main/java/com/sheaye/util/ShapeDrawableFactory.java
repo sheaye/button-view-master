@@ -35,7 +35,7 @@ public class ShapeDrawableFactory {
         return new ShapeDrawable(shape);
     }
 
-    public static ShapeDrawable createRoundRect(final int solidColor, final int radius, final int strokeWidth, final int strokeColor) {
+    public static ShapeDrawable createRoundRect(final int radius, final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override
             public void draw(Canvas canvas, Paint paint) {

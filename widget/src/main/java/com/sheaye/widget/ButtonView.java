@@ -47,7 +47,6 @@ public class ButtonView extends AppCompatButton {
         }
     }
 
-    private Context mContext;
     protected ResourcesHelper mResourcesHelper;
 
     public ButtonView(Context context) {
@@ -62,7 +61,6 @@ public class ButtonView extends AppCompatButton {
         super(context, attrs, defStyleAttr);
         setClickable(true);
         setMinHeight(0);
-        mContext = context;
         mResourcesHelper = new ResourcesHelper(context);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
 
@@ -141,7 +139,7 @@ public class ButtonView extends AppCompatButton {
             case CIRCLE_RECT:
                 return ShapeDrawableFactory.createCircleRect(solidColor, mStrokeWidth, strokeColor);
             default:
-                return ShapeDrawableFactory.createRoundRect(solidColor, mRadius, mStrokeWidth, strokeColor);
+                return ShapeDrawableFactory.createRoundRect(mRadius,solidColor, mStrokeWidth, strokeColor);
         }
     }
 

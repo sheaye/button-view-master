@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.sheaye.sample.MainActivity">
+
+    <com.sheaye.widget.ButtonView
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shape="roundRect"
+        app:backgroundColorEntries="@array/colors"
+        android:text="测试一哈"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:textColor="@android:color/white"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="30dp"
+        android:text="测试一哈"
+        android:background="@drawable/selector_button"/>
+
+</LinearLayout>

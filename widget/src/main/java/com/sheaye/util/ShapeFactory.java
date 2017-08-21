@@ -57,6 +57,15 @@ public class ShapeFactory {
     }
 
     public static Shape createCircle() {
-        return new ArcShape(0, 360);
+        return new Shape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint) {
+                float cx = getWidth() / 2;
+                float cy = getHeight() / 2;
+                float radius = Math.min(cx, cy);
+                canvas.drawCircle(cx, cy, radius, paint);
+            }
+        };
+
     }
 }

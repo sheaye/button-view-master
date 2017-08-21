@@ -11,9 +11,9 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:shape="roundRect"
+        app:shape="circle"
         app:backgroundColorEntries="@array/colors"
-        android:text="测试一哈"
+        android:text="ButtonView"
         android:textSize="20sp"
         android:padding="10dp"
         android:layout_margin="10dp"
@@ -25,7 +25,16 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_margin="30dp"
-        android:text="测试一哈"
-        android:background="@drawable/selector_button"/>
+        android:text="button2"/>
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="30dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:text="textView"/>
 
 </LinearLayout>

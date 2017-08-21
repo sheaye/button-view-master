@@ -22,18 +22,15 @@ public class SelectorFactory {
         return new ColorStateList(states, colors);
     }
 
-    public static StateListDrawable createDrawableSelector(Drawable... drawables) {
-        if (drawables.length > 3) {
-            throw new IllegalArgumentException("颜色最多三个：normal,pressed,selected");
-        }
+    public static StateListDrawable createDrawableSelector(Drawable normal, Drawable pressed, Drawable selected) {
         StateListDrawable drawable = new StateListDrawable();
-        if (drawables.length > 1) {
-            drawable.addState(new int[]{android.R.attr.state_pressed}, drawables[1]);
+        if (pressed != null) {
+            drawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
         }
-        if (drawables.length > 2) {
-            drawable.addState(new int[]{android.R.attr.state_selected}, drawables[2]);
+        if (selected != null) {
+            drawable.addState(new int[]{android.R.attr.state_selected}, selected);
         }
-        drawable.addState(new int[]{}, drawables[0]);
+        drawable.addState(new int[]{}, normal);
         return drawable;
     }
 

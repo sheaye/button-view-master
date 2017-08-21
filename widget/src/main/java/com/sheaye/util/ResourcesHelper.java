@@ -28,7 +28,7 @@ public class ResourcesHelper {
         return ResourcesCompat.getColor(getResources(), colorRes, null);
     }
 
-    public int[] getResourceIdArray(@ArrayRes int arrayId) {
+    public int[] getResIdArray(@ArrayRes int arrayId) {
         if (arrayId == View.NO_ID) {
             return null;
         }

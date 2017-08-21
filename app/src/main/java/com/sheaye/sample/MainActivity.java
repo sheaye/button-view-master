@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected View mButton2;
     protected View mButton1;
+    protected View mText3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mButton1 = findViewById(R.id.button1);
         mButton2 = findViewById(R.id.button2);
+        mText3 = findViewById(R.id.text3);
         ViewCompat.setBackground(mButton2,
                 SelectorFactory.createDrawableSelector(
                         DrawableUtil.createDrawable(ShapeFactory.createRoundRect(15), Color.BLUE),
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                         DrawableUtil.createDrawable(ShapeFactory.createRoundRect(15), Color.YELLOW)
                 ));
         mButton1.setSelected(true);
-        mButton2.setSelected(true);
+        mButton1.setClickable(true);
 
     }
 }

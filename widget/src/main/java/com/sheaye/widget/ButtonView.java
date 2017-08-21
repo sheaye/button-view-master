@@ -3,18 +3,15 @@ package com.sheaye.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.Shape;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
-import com.sheaye.util.DrawableUtil;
 import com.sheaye.util.ResourcesHelper;
 import com.sheaye.util.SelectorFactory;
-import com.sheaye.util.ShapeFactory;
+import com.sheaye.util.ShapeDrawableFactory;
 
 /**
  * Created by yexinyan on 2017/8/20.
@@ -23,15 +20,17 @@ import com.sheaye.util.ShapeFactory;
 public class ButtonView extends AppCompatButton {
 
     private int mRadius;
-    protected ButtonShape mButtonShape;
-    protected int mNormalSolidColor;
-    protected int mPressedSolidColor;
-    protected int mSelectedSolidColor;
-    protected Drawable mNormalBackgroundDrawable;
-    protected Drawable mPressedBackgroundDrawable;
-    protected Drawable mSelectedBackgroundDrawable;
-    protected int mNormalTextColor;
-    protected int mPressedTextColor;
+    private ButtonShape mButtonShape;
+    private int mNormalSolidColor;
+    private int mPressedSolidColor;
+    private int mSelectedSolidColor;
+    private Drawable mNormalBackgroundDrawable;
+    private Drawable mPressedBackgroundDrawable;
+    private Drawable mSelectedBackgroundDrawable;
+    private int mStrokeWidth;
+    protected int mNormalStrokeColor;
+    protected int mPressedStrokeColor;
+    protected int mSelectedStrokeColor;
 
     public enum ButtonShape {
         RECTANGLE, CIRCLE, CIRCLE_RECT;
@@ -71,37 +70,78 @@ public class ButtonView extends AppCompatButton {
         setRadius(typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0));
 
         int solidColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NO_ID);
-        int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId);
-        setSolidColors(solidColorResIds);
+        setSolidColorEntries(solidColorArrayId);
 
         int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_drawableEntries, NO_ID);
-        int[] drawableResIds = mResourcesHelper.getResIdArray(drawableArrayId);
-        setBackgroundDrawables(drawableResIds);
+        setDrawableEntries(drawableArrayId);
 
         int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NO_ID);
-        int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId);
-        setTextColors(textColorResIds);
+        setTextColorEntries(textColorArrayId);
 
-        float strokeWidth = typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 0);
-        int strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, -1);
+        mStrokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 0);
+        if (mStrokeWidth != 0) {
+            int strokeColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_strokeColorEntries, NO_ID);
+            setStrokeColorEntries(strokeColorArrayId);
+        }
 
         typedArray.recycle();
         commit();
     }
+
+    private void setSolidColorEntries(int solidColorArrayId) {
+        if (solidColorArrayId != NO_ID) {
+            int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId, 3);
+            setSolidColors(mResourcesHelper.getColor(solidColorResIds[0]),
+                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
+        }
+    }
+
+    private void setDrawableEntries(int drawableArrayId) {
+        if (drawableArrayId != NO_ID) {
+            int[] drawableResIds = mResourcesHelper.getResIdArray(drawableArrayId, 3);
+            setBackgroundDrawables(mResourcesHelper.getDrawable(drawableResIds[0]),
+                    mResourcesHelper.getDrawable(drawableResIds[1]),
+                    mResourcesHelper.getDrawable(drawableResIds[2]));
+        }
+    }
+
+    private void setTextColorEntries(int textColorArrayId) {
+        if (textColorArrayId != NO_ID) {
+            int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId, 3);
+            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
+                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
+        }
+    }
+
+    private void setStrokeColorEntries(int strokeColorArrayId) {
+        if (strokeColorArrayId != NO_ID) {
+            int[] strokeColorsResIds = mResourcesHelper.getResIdArray(strokeColorArrayId, 3);
+            setStrokeColors(mResourcesHelper.getColor(strokeColorsResIds[0])
+                    , mResourcesHelper.getColor(strokeColorsResIds[1]), mResourcesHelper.getColor(strokeColorsResIds[2]));
+        }
+    }
+
+    public ButtonView setStrokeColors(int normal, int pressed, int selected) {
+        mNormalStrokeColor = normal;
+        mPressedStrokeColor = pressed;
+        mSelectedStrokeColor = selected;
+        return this;
+    }
+
 
     public ButtonView setShape(ButtonShape shape) {
         mButtonShape = shape;
         return this;
     }
 
-    private Shape getShape(ButtonShape shape) {
-        switch (shape) {
+    private ShapeDrawable getShape(int strokeColor, int solidColor) {
+        switch (mButtonShape) {
             case CIRCLE:
-                return ShapeFactory.createCircle();
+                return ShapeDrawableFactory.createCircle(solidColor, mStrokeWidth, strokeColor);
             case CIRCLE_RECT:
-                return ShapeFactory.createCircleRect();
+                return ShapeDrawableFactory.createCircleRect(solidColor, mStrokeWidth, strokeColor);
             default:
-                return ShapeFactory.createRoundRect(mRadius);
+                return ShapeDrawableFactory.createRoundRect(solidColor, mRadius, mStrokeWidth, strokeColor);
         }
     }
 
@@ -110,69 +150,11 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setNormalSolidColor(int color) {
-        mNormalSolidColor = color;
+    public ButtonView setSolidColors(int normal, int pressed, int selected) {
+        mNormalSolidColor = normal;
+        mPressedSolidColor = pressed;
+        mSelectedSolidColor = selected;
         return this;
-    }
-
-    public ButtonView setPressedSolidColor(int color) {
-        mPressedSolidColor = color;
-        return this;
-    }
-
-    public ButtonView setSelectedSolidColor(int color) {
-        mSelectedSolidColor = color;
-        return this;
-    }
-
-    private void setSolidColors(@ColorRes int[] colors) {
-        if (colors == null) {
-            return;
-        }
-        if (colors.length > 3) {
-            throw new IllegalArgumentException("solid 背景色(normal,pressed,selected)最多不能超过3个");
-        }
-        setNormalSolidColor(mResourcesHelper.getColor(colors[0]));
-        if (colors.length > 1) {
-            setPressedSolidColor(mResourcesHelper.getColor(colors[1]));
-        }
-        if (colors.length > 2) {
-            setSelectedSolidColor(mResourcesHelper.getColor(colors[2]));
-        }
-    }
-
-    private void setBackgroundDrawables(@DrawableRes int[] drawableResIds) {
-        if (drawableResIds == null) {
-            return;
-        }
-        if (drawableResIds.length > 3) {
-            throw new IllegalArgumentException("solid 背景图(normal,pressed,selected)最多不能超过3个");
-        }
-        setNormalBackgroundDrawable(mResourcesHelper.geDrawable(drawableResIds[0]));
-        if (drawableResIds.length > 1) {
-            setPressedBackgroundDrawable(mResourcesHelper.geDrawable(drawableResIds[1]));
-        }
-        if (drawableResIds.length > 2) {
-            setSelectedBackgroundDrawable(mResourcesHelper.geDrawable(drawableResIds[2]));
-        }
-    }
-
-    private void setTextColors(@ColorRes int[] textColorResIds) {
-        if (textColorResIds == null) {
-            return;
-        }
-        int normal, pressed = 0, selected = 0;
-        if (textColorResIds.length > 3) {
-            throw new IllegalArgumentException("solid 背景图(normal,pressed,selected)最多不能超过3个");
-        }
-        normal = mResourcesHelper.getColor(textColorResIds[0]);
-        if (textColorResIds.length > 1) {
-            pressed = mResourcesHelper.getColor(textColorResIds[1]);
-        }
-        if (textColorResIds.length > 2) {
-            selected = mResourcesHelper.getColor(textColorResIds[2]);
-        }
-        setTextColors(normal, pressed, selected);
     }
 
     public ButtonView setTextColors(int normal, int pressed, int selected) {
@@ -180,37 +162,22 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setNormalBackgroundDrawable(Drawable drawable) {
-        if (mNormalBackgroundDrawable != drawable) {
-            mNormalBackgroundDrawable = drawable;
-        }
-        return this;
-    }
-
-    public ButtonView setPressedBackgroundDrawable(Drawable drawable) {
-        if (mPressedBackgroundDrawable != drawable) {
-            mPressedBackgroundDrawable = drawable;
-        }
-        return this;
-    }
-
-    public ButtonView setSelectedBackgroundDrawable(Drawable drawable) {
-        if (mSelectedBackgroundDrawable != drawable) {
-            mSelectedBackgroundDrawable = drawable;
-        }
+    public ButtonView setBackgroundDrawables(Drawable normal, Drawable pressed, Drawable selected) {
+        mNormalBackgroundDrawable = normal;
+        mPressedBackgroundDrawable = pressed;
+        mSelectedBackgroundDrawable = selected;
         return this;
     }
 
     public void commit() {
-        Shape shape = getShape(mButtonShape);
         if (mNormalBackgroundDrawable == null) {
-            mNormalBackgroundDrawable = DrawableUtil.createDrawable(shape, mNormalSolidColor);
+            mNormalBackgroundDrawable = getShape(mNormalStrokeColor, mNormalSolidColor);
         }
         if (mPressedBackgroundDrawable == null) {
-            mPressedBackgroundDrawable = DrawableUtil.createDrawable(shape, mPressedSolidColor);
+            mPressedBackgroundDrawable = getShape(mPressedStrokeColor, mPressedSolidColor);
         }
         if (mSelectedBackgroundDrawable == null) {
-            mSelectedBackgroundDrawable = DrawableUtil.createDrawable(shape, mSelectedSolidColor);
+            mSelectedBackgroundDrawable = getShape(mSelectedStrokeColor, mSelectedSolidColor);
         }
         StateListDrawable selector = SelectorFactory.createDrawableSelector(mNormalBackgroundDrawable, mPressedBackgroundDrawable, mSelectedBackgroundDrawable);
         ViewCompat.setBackground(this, selector);

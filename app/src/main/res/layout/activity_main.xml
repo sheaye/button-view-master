@@ -17,7 +17,9 @@
     <com.sheaye.widget.ButtonView
         app:shape="rectangle"
         app:cornerRadius="10dp"
+        app:strokeColorEntries="@array/strokeColors"
         app:solidColorEntries="@array/solidColors"
+        app:strokeWidth="5dp"
         android:text="roundRectangle"
         style="@style/ButtonView"/>
 

@@ -10,7 +10,7 @@
         <attr name="solidColorEntries" format="reference" />
         <attr name="drawableEntries" format="reference" />
         <attr name="textColorEntries" format="reference"/>
+        <attr name="strokeColorEntries" format="reference" />
         <attr name="strokeWidth" format="dimension|reference" />
-        <attr name="strokeColor" format="color|reference" />
     </declare-styleable>
 </resources>

@@ -28,7 +28,7 @@ public class ResourcesHelper {
         return ResourcesCompat.getColor(mResources, colorRes, null);
     }
 
-    public Drawable geDrawbale(@DrawableRes int drawableRes) {
+    public Drawable geDrawable(@DrawableRes int drawableRes) {
         return ResourcesCompat.getDrawable(mResources, drawableRes, null);
     }
 

@@ -10,6 +10,7 @@
     <com.sheaye.widget.ButtonView
         app:shape="rectangle"
         app:solidColorEntries="@array/solidColors"
+        app:textColorEntries="@array/textColors"
         android:text="rectangle"
         style="@style/ButtonView" />
 
@@ -38,5 +39,11 @@
         app:shape="circle"
         app:drawableEntries="@array/drawables"
         style="@style/ButtonView"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="button"/>
 
 </LinearLayout>

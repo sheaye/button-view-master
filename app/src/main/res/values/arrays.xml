@@ -11,4 +11,10 @@
         <item>@android:color/holo_red_dark</item>
         <item>@android:color/holo_blue_bright</item>
     </array>
+
+    <array name="textColors">
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_blue_bright</item>
+        <item>@android:color/holo_red_light</item>
+    </array>
 </resources>

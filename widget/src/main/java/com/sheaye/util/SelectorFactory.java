@@ -14,11 +14,12 @@ import android.support.v4.content.ContextCompat;
 public class SelectorFactory {
 
     public static ColorStateList createColorSelector(int normalColor, int pressedColor, int selectedColor) {
+//      注意顺序
         int[][] states = new int[3][];
-        states[0] = new int[]{};
-        states[1] = new int[]{android.R.attr.state_pressed};
-        states[2] = new int[]{android.R.attr.state_selected};
-        int[] colors = new int[]{normalColor, pressedColor, selectedColor};
+        states[0] = new int[]{android.R.attr.state_pressed};
+        states[1] = new int[]{android.R.attr.state_selected};
+        states[2] = new int[]{};
+        int[] colors = new int[]{pressedColor, selectedColor, normalColor};
         return new ColorStateList(states, colors);
     }
 

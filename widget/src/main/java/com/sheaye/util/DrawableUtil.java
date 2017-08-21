@@ -11,6 +11,9 @@ import android.graphics.drawable.shapes.Shape;
 public class DrawableUtil {
 
     public static Drawable createDrawable(Shape shape, int color) {
+        if (shape == null || color == 0) {
+            return null;
+        }
         ShapeDrawable drawable = new ShapeDrawable(shape);
         drawable.getPaint().setColor(color);
         return drawable;

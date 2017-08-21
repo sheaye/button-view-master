@@ -12,19 +12,24 @@ import android.graphics.drawable.shapes.Shape;
 
 public class ShapeDrawableFactory {
 
+    private static void drawRoundRect(Canvas canvas, Paint paint, float radius, int solidColor, int strokeWidth, int strokeColor) {
+        int width = canvas.getWidth();
+        int height = canvas.getHeight();
+        if (strokeWidth != 0) {
+            paint.setColor(strokeColor);
+            RectF outerRectF = new RectF(0, 0, width, height);
+            canvas.drawRoundRect(outerRectF, radius, radius, paint);
+        }
+        RectF innerRectF = new RectF(strokeWidth, strokeWidth, width - strokeWidth, height - strokeWidth);
+        paint.setColor(solidColor);
+        canvas.drawRoundRect(innerRectF, radius - strokeWidth, radius - strokeWidth, paint);
+    }
+
     public static ShapeDrawable createCircleRect(final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override
             public void draw(Canvas canvas, Paint paint) {
-                float radius = getHeight() / 2;
-                if (strokeWidth != 0) {
-                    paint.setColor(strokeColor);
-                    RectF outerRectF = new RectF(0, 0, getWidth(), getHeight());
-                    canvas.drawRoundRect(outerRectF, radius, radius, paint);
-                }
-                RectF innerRectF = new RectF(strokeWidth, strokeWidth, getWidth() - strokeWidth, getHeight() - strokeWidth);
-                paint.setColor(solidColor);
-                canvas.drawRoundRect(innerRectF, radius - strokeWidth, radius - strokeWidth, paint);
+                drawRoundRect(canvas, paint, getHeight() / 2, solidColor, strokeWidth, strokeColor);
             }
         };
         return new ShapeDrawable(shape);
@@ -34,14 +39,7 @@ public class ShapeDrawableFactory {
         Shape shape = new Shape() {
             @Override
             public void draw(Canvas canvas, Paint paint) {
-                if (strokeWidth != 0) {
-                    paint.setColor(strokeColor);
-                    RectF outerRectF = new RectF(0, 0, getWidth(), getHeight());
-                    canvas.drawRoundRect(outerRectF, radius, radius, paint);
-                }
-                RectF innerRectF = new RectF(strokeWidth, strokeWidth, getWidth() - strokeWidth, getHeight() - strokeWidth);
-                paint.setColor(solidColor);
-                canvas.drawRoundRect(innerRectF, radius - strokeWidth, radius - strokeWidth, paint);
+                drawRoundRect(canvas, paint, radius, solidColor, strokeWidth, strokeColor);
             }
         };
         return new ShapeDrawable(shape);

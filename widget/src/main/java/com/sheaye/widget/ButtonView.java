@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
@@ -67,11 +68,14 @@ public class ButtonView extends AppCompatButton {
         setShape(ButtonShape.getShape(typedArray.getInt(R.styleable.ButtonView_shape, 1)));
         setRadius(typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0));
 
-        int solidColorIds = typedArray.getResourceId(R.styleable.ButtonView_backgroundColorEntries, NO_ID);
-        int[] solidColors = mResourcesHelper.getResIdArray(solidColorIds);
-        setSolidColors(solidColors);
+        int solidColorIds = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NO_ID);
+        int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorIds);
+        setSolidColors(solidColorResIds);
 
-        int drawableEntriesId = typedArray.getResourceId(R.styleable.ButtonView_drawableEntries, NO_ID);
+        int drawableEntries = typedArray.getResourceId(R.styleable.ButtonView_drawableEntries, NO_ID);
+        int[] drawableResIds = mResourcesHelper.getResIdArray(drawableEntries);
+        setBackgroundDrawables(drawableResIds);
+
         float strokeWidth = typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 0);
         int strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, -1);
 
@@ -115,9 +119,9 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    private void setSolidColors(@ColorRes int... colors) {
+    private void setSolidColors(@ColorRes int[] colors) {
         if (colors == null) {
-            setSolidColors(android.R.color.background_light);
+            return;
         }
         if (colors.length > 3) {
             throw new IllegalArgumentException("solid 背景色(normal,pressed,selected)最多不能超过3个");
@@ -128,6 +132,22 @@ public class ButtonView extends AppCompatButton {
         }
         if (colors.length > 2) {
             setSelectedSolidColor(mResourcesHelper.getColor(colors[2]));
+        }
+    }
+
+    private void setBackgroundDrawables(@DrawableRes int[] drawableResIds) {
+        if (drawableResIds == null) {
+            return;
+        }
+        if (drawableResIds.length > 3) {
+            throw new IllegalArgumentException("solid 背景图(normal,pressed,selected)最多不能超过3个");
+        }
+        setNormalBackgroundDrawable(mResourcesHelper.geDrawbale(drawableResIds[0]));
+        if (drawableResIds.length > 1) {
+            setPressedBackgroundDrawable(mResourcesHelper.geDrawbale(drawableResIds[1]));
+        }
+        if (drawableResIds.length > 2) {
+            setSelectedBackgroundDrawable(mResourcesHelper.geDrawbale(drawableResIds[2]));
         }
     }
 
@@ -145,7 +165,7 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setSelectedBackgroundDrawbale(Drawable drawable) {
+    public ButtonView setSelectedBackgroundDrawable(Drawable drawable) {
         if (mSelectedBackgroundDrawable != drawable) {
             mSelectedBackgroundDrawable = drawable;
         }

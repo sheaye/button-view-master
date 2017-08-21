@@ -7,7 +7,7 @@
             <enum name="circleRect" value="3"/>
         </attr>
         <attr name="cornerRadius" format="dimension|reference"/>
-        <attr name="backgroundColorEntries" format="reference" />
+        <attr name="solidColorEntries" format="reference" />
         <attr name="drawableEntries" format="reference" />
         <attr name="textColorEntries" format="reference"/>
         <attr name="strokeWidth" format="dimension|reference" />

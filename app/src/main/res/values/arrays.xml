@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="images">
+    <array name="drawables">
         <item>@drawable/ic_normal</item>
         <item>@drawable/ic_pressed</item>
         <item>@drawable/ic_selected</item>
     </array>
 
-    <array name="colors">
-        <item>@android:color/darker_gray</item>
-        <item>@color/colorAccent</item>
-        <item>@color/colorPrimaryDark</item>
+    <array name="solidColors">
+        <item>@android:color/holo_red_light</item>
+        <item>@android:color/holo_red_dark</item>
+        <item>@android:color/holo_blue_bright</item>
     </array>
 </resources>

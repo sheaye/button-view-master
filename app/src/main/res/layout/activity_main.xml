@@ -8,10 +8,10 @@
     tools:context="com.sheaye.sample.MainActivity">
 
     <com.sheaye.widget.ButtonView
-        app:shape="rectangle"
-        app:solidColorEntries="@array/solidColors"
         app:textColorEntries="@array/textColors"
         android:text="rectangle"
+        android:gravity="center"
+        android:drawableLeft="@drawable/ic_pressed"
         style="@style/ButtonView" />
 
     <com.sheaye.widget.ButtonView

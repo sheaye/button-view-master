@@ -45,7 +45,6 @@ public class ShapeDrawableFactory {
         return new ShapeDrawable(shape);
     }
 
-
     public static ShapeDrawable createCircle(final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override

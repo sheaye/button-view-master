@@ -181,5 +181,4 @@ public class ButtonView extends AppCompatButton {
         ViewCompat.setBackground(this, selector);
     }
 
-
 }

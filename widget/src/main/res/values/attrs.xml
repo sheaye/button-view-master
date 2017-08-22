@@ -4,13 +4,22 @@
         <attr name="shape" format="enum">
             <enum name="rectangle" value="1" />
             <enum name="circle" value="2" />
-            <enum name="circleRect" value="3"/>
+            <enum name="circleRect" value="3" />
         </attr>
-        <attr name="cornerRadius" format="dimension|reference"/>
+        <attr name="cornerRadius" format="dimension|reference" />
         <attr name="solidColorEntries" format="reference" />
         <attr name="drawableEntries" format="reference" />
-        <attr name="textColorEntries" format="reference"/>
+        <attr name="textColorEntries" format="reference" />
         <attr name="strokeColorEntries" format="reference" />
         <attr name="strokeWidth" format="dimension|reference" />
+        <attr name="compoundIcon" format="reference"/>
+        <attr name="compoundIconPressed" format="reference"/>
+        <attr name="compoundIconSelected" format="reference"/>
+        <attr name="iconGravity" format="enum">
+            <enum name="left" value="1"/>
+            <enum name="top" value="2"/>
+            <enum name="right" value="3"/>
+            <enum name="bottom" value="4"/>
+        </attr>
     </declare-styleable>
 </resources>

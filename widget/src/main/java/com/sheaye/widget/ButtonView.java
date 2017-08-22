@@ -19,8 +19,11 @@ import com.sheaye.util.ShapeDrawableFactory;
 
 public class ButtonView extends AppCompatButton {
 
+    static final int SHAPE_RECTANGLE = 1;
+    static final int SHAPE_CIRCLE = 2;
+    static final int SHAPE_CIRCLE_RECT = 3;
+
     private int mRadius;
-    private ButtonShape mButtonShape;
     private int mNormalSolidColor;
     private int mPressedSolidColor;
     private int mSelectedSolidColor;
@@ -28,24 +31,10 @@ public class ButtonView extends AppCompatButton {
     private Drawable mPressedBackgroundDrawable;
     private Drawable mSelectedBackgroundDrawable;
     private int mStrokeWidth;
-    protected int mNormalStrokeColor;
-    protected int mPressedStrokeColor;
-    protected int mSelectedStrokeColor;
-
-    public enum ButtonShape {
-        RECTANGLE, CIRCLE, CIRCLE_RECT;
-
-        private static ButtonShape getShape(int value) {
-            switch (value) {
-                case 2:
-                    return ButtonShape.CIRCLE;
-                case 3:
-                    return ButtonShape.CIRCLE_RECT;
-                default:
-                    return ButtonShape.RECTANGLE;
-            }
-        }
-    }
+    private int mNormalStrokeColor;
+    private int mPressedStrokeColor;
+    private int mSelectedStrokeColor;
+    private int mBackgroundShape;
 
     protected ResourcesHelper mResourcesHelper;
 
@@ -64,7 +53,7 @@ public class ButtonView extends AppCompatButton {
         mResourcesHelper = new ResourcesHelper(context);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
 
-        setShape(ButtonShape.getShape(typedArray.getInt(R.styleable.ButtonView_shape, 1)));
+        mBackgroundShape = typedArray.getInt(R.styleable.ButtonView_shape, 1);
         setRadius(typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0));
 
         int solidColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NO_ID);
@@ -128,18 +117,18 @@ public class ButtonView extends AppCompatButton {
 
 
     public ButtonView setShape(ButtonShape shape) {
-        mButtonShape = shape;
+        mBackgroundShape = shape.getValue();
         return this;
     }
 
     private ShapeDrawable getShape(int strokeColor, int solidColor) {
-        switch (mButtonShape) {
-            case CIRCLE:
+        switch (mBackgroundShape) {
+            case SHAPE_CIRCLE:
                 return ShapeDrawableFactory.createCircle(solidColor, mStrokeWidth, strokeColor);
-            case CIRCLE_RECT:
+            case SHAPE_CIRCLE_RECT:
                 return ShapeDrawableFactory.createCircleRect(solidColor, mStrokeWidth, strokeColor);
             default:
-                return ShapeDrawableFactory.createRoundRect(mRadius,solidColor, mStrokeWidth, strokeColor);
+                return ShapeDrawableFactory.createRoundRect(mRadius, solidColor, mStrokeWidth, strokeColor);
         }
     }
 

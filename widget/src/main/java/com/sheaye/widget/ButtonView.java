@@ -39,6 +39,9 @@ public class ButtonView extends AppCompatButton {
     static final int SHAPE_CIRCLE = 2;
     static final int SHAPE_CIRCLE_RECT = 3;
 
+    private static final int HORIZONTAL = 0;
+    private static final int VERTICAL = 1;
+
     private int mRadius;
     private int mNormalSolidColor;
     private int mPressedSolidColor;
@@ -52,12 +55,16 @@ public class ButtonView extends AppCompatButton {
     private int mSelectedStrokeColor;
     private int mBackgroundShape;
 
-    protected ResourcesHelper mResourcesHelper;
-    protected Drawable mDrawableLeft;
-    protected Drawable mDrawableTop;
-    protected Drawable mDrawableRight;
-    protected Drawable mDrawableBottom;
-    protected StateListDrawable mCompoundDrawable;
+    private ResourcesHelper mResourcesHelper;
+    private Drawable mDrawableLeft;
+    private Drawable mDrawableTop;
+    private Drawable mDrawableRight;
+    private Drawable mDrawableBottom;
+    private StateListDrawable mCompoundDrawable;
+    private int mCompoundIconWidth;
+    private int mCompoundIconHeight;
+    private int mCompoundOrientation;
+
 
     public ButtonView(Context context) {
         this(context, null);
@@ -90,6 +97,10 @@ public class ButtonView extends AppCompatButton {
     private void setCompoundIconIfNeed(TypedArray typedArray) {
         int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NO_ID);
         int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 1);
+        int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
+        setCompoundDrawablePadding(compoundPadding);
+        mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
+        mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NO_ID) {
             int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
             setCompoundIcons(mResourcesHelper.getDrawable(resIdArray[0]),
@@ -159,7 +170,18 @@ public class ButtonView extends AppCompatButton {
             setMeasuredDimension(diameter, diameter);
         }
         if (mCompoundDrawable != null) {
-            mCompoundDrawable.setBounds(0, 0, 100, 100);
+            if (mCompoundIconWidth == 0 || mCompoundIconHeight == 0) {
+                if (mCompoundOrientation == HORIZONTAL) {
+                    mCompoundIconHeight = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
+                    float scale = mCompoundIconHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
+                    mCompoundIconWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
+                } else {
+                    mCompoundIconWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+                    float scale = mCompoundIconWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
+                    mCompoundIconHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
+                }
+            }
+            mCompoundDrawable.setBounds(0, 0, mCompoundIconWidth, mCompoundIconHeight);
         }
     }
 
@@ -175,17 +197,21 @@ public class ButtonView extends AppCompatButton {
             case 2:// top
             case Gravity.TOP:
                 mDrawableTop = mCompoundDrawable;
+                mCompoundOrientation = HORIZONTAL;
                 break;
             case 3://right
             case Gravity.RIGHT:
                 mDrawableRight = mCompoundDrawable;
+                mCompoundOrientation = HORIZONTAL;
                 break;
             case 4://bottom
             case Gravity.BOTTOM:
                 mDrawableBottom = mCompoundDrawable;
+                mCompoundOrientation = VERTICAL;
                 break;
             default:
                 mDrawableLeft = mCompoundDrawable;
+                mCompoundOrientation = HORIZONTAL;
                 break;
         }
         setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);

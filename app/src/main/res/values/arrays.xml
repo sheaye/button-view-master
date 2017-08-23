@@ -13,7 +13,7 @@
     </array>
 
     <array name="textColors">
-        <item>@android:color/white</item>
+        <item>@android:color/black</item>
         <item>@android:color/holo_blue_bright</item>
         <item>@android:color/holo_red_light</item>
     </array>

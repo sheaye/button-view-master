@@ -20,6 +20,8 @@
         <attr name="textColorEntries" format="reference" />
 
         <attr name="compoundIcon" format="reference" />
+        <attr name="compoundIconWidth" format="reference|dimension"/>
+        <attr name="compoundIconHeight" format="reference|dimension"/>
         <attr name="compoundIconEntries" format="reference" />
         <attr name="compoundIconGravity" format="enum">
             <enum name="left" value="1" />
@@ -27,5 +29,6 @@
             <enum name="right" value="3" />
             <enum name="bottom" value="4" />
         </attr>
+        <attr name="compoundPadding" format="dimension|reference"/>
     </declare-styleable>
 </resources>

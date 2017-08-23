@@ -224,18 +224,18 @@ public class ButtonView extends AppCompatButton {
     public ButtonView setCompoundIcons(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
         mCompoundDrawable = SelectorFactory.createDrawableSelector(compoundIcon, compoundIconPressed, compoundIconSelected);
         switch (gravity) {
-            case 2:// top
+            case 1:// top
             case Gravity.TOP:
                 mDrawableTop = mCompoundDrawable;
                 mCompoundOrientation = VERTICAL;
                 break;
-            case 3://right
+            case 2://right
             case Gravity.END:
             case Gravity.RIGHT:
                 mDrawableRight = mCompoundDrawable;
                 mCompoundOrientation = HORIZONTAL;
                 break;
-            case 4://bottom
+            case 3://bottom
             case Gravity.BOTTOM:
                 mDrawableBottom = mCompoundDrawable;
                 mCompoundOrientation = VERTICAL;

@@ -24,10 +24,7 @@
         style="@style/ButtonView"/>
 
     <com.sheaye.widget.ButtonView
-        app:compoundIcon="@drawable/ic_normal"
-        app:compoundIconPressed="@drawable/ic_pressed"
-        app:compoundIconSelected="@drawable/ic_selected"
-        app:compoundIconGravity="bottom"
+        app:compoundIconEntries="@array/drawables"
         app:textColorEntries="@array/textColors"
         android:text="roundRectangle"
         style="@style/ButtonView"/>
@@ -48,14 +45,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:shape="circle"
-        app:drawableEntries="@array/drawables"
+        app:backgroundDrawableEntries="@array/drawables"
         style="@style/ButtonView"/>
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="button"
-        android:drawableLeft="@drawable/selector_button"/>
 
 </LinearLayout>

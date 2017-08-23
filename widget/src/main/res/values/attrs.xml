@@ -7,19 +7,25 @@
             <enum name="circleRect" value="3" />
         </attr>
         <attr name="cornerRadius" format="dimension|reference" />
+
+        <attr name="solidColor" format="color|reference" />
         <attr name="solidColorEntries" format="reference" />
-        <attr name="drawableEntries" format="reference" />
-        <attr name="textColorEntries" format="reference" />
+
+        <attr name="strokeColor" format="color|reference"/>
         <attr name="strokeColorEntries" format="reference" />
         <attr name="strokeWidth" format="dimension|reference" />
-        <attr name="compoundIcon" format="reference"/>
-        <attr name="compoundIconPressed" format="reference"/>
-        <attr name="compoundIconSelected" format="reference"/>
+
+        <attr name="backgroundDrawableEntries" format="reference" />
+
+        <attr name="textColorEntries" format="reference" />
+
+        <attr name="compoundIcon" format="reference" />
+        <attr name="compoundIconEntries" format="reference" />
         <attr name="compoundIconGravity" format="enum">
-            <enum name="left" value="1"/>
-            <enum name="top" value="2"/>
-            <enum name="right" value="3"/>
-            <enum name="bottom" value="4"/>
+            <enum name="left" value="1" />
+            <enum name="top" value="2" />
+            <enum name="right" value="3" />
+            <enum name="bottom" value="4" />
         </attr>
     </declare-styleable>
 </resources>

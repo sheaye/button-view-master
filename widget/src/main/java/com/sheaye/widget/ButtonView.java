@@ -3,6 +3,7 @@ package com.sheaye.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -17,7 +18,7 @@ import com.sheaye.util.ShapeDrawableFactory;
 
 /**
  * Created by yexinyan on 2017/8/20.
- * 
+ * <p>
  * R.styleable.ButtonView_shape
  * R.styleable.ButtonView_cornerRadius
  * R.styleable.ButtonView_solidColorEntries
@@ -30,7 +31,6 @@ import com.sheaye.util.ShapeDrawableFactory;
  * R.styleable.ButtonView_compoundIconSelected
  * R.styleable.ButtonView_compoundIconGravity
  */
-
 
 
 public class ButtonView extends AppCompatButton {
@@ -77,29 +77,78 @@ public class ButtonView extends AppCompatButton {
         mBackgroundShape = typedArray.getInt(R.styleable.ButtonView_shape, 1);
         setRadius(typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0));
 
-        int solidColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NO_ID);
-        setSolidColorEntries(solidColorArrayId);
-
-        int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_drawableEntries, NO_ID);
-        setDrawableEntries(drawableArrayId);
-
-        int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NO_ID);
-        setTextColorEntries(textColorArrayId);
-
-        mStrokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 0);
-        if (mStrokeWidth != 0) {
-            int strokeColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_strokeColorEntries, NO_ID);
-            setStrokeColorEntries(strokeColorArrayId);
-        }
-
-        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
-        Drawable compoundIconPressed = typedArray.getDrawable(R.styleable.ButtonView_compoundIconPressed);
-        Drawable compoundIconSelected = typedArray.getDrawable(R.styleable.ButtonView_compoundIconSelected);
-        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 1);
-        setCompoundIcons(compoundIcon, compoundIconPressed, compoundIconSelected, gravity);
+        setSolidColorIfNeed(typedArray);
+        setBackgroundDrawablesIfNeed(typedArray);
+        setTextColorsIfNeed(typedArray);
+        setStrokeIfNeed(typedArray);
+        setCompoundIconIfNeed(typedArray);
 
         typedArray.recycle();
         commit();
+    }
+
+    private void setCompoundIconIfNeed(TypedArray typedArray) {
+        int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NO_ID);
+        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 1);
+        if (compoundIconArrayId != NO_ID) {
+            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
+            setCompoundIcons(mResourcesHelper.getDrawable(resIdArray[0]),
+                    mResourcesHelper.getDrawable(resIdArray[1]),
+                    mResourcesHelper.getDrawable(resIdArray[2]), gravity);
+            return;
+        }
+        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
+        if (compoundIcon != null) {
+            setCompoundIcons(compoundIcon, null, null, gravity);
+        }
+    }
+
+    private void setStrokeIfNeed(TypedArray typedArray) {
+        mStrokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 0);
+        if (mStrokeWidth != 0) {
+            int strokeColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_strokeColorEntries, NO_ID);
+            if (strokeColorArrayId != NO_ID) {
+                int[] strokeColorsResIds = mResourcesHelper.getResIdArray(strokeColorArrayId, 3);
+                setStrokeColors(mResourcesHelper.getColor(strokeColorsResIds[0])
+                        , mResourcesHelper.getColor(strokeColorsResIds[1]), mResourcesHelper.getColor(strokeColorsResIds[2]));
+            } else {
+                int strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, Color.TRANSPARENT);
+                setStrokeColors(strokeColor, 0, 0);
+            }
+        }
+    }
+
+    private void setTextColorsIfNeed(TypedArray typedArray) {
+        int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NO_ID);
+        if (textColorArrayId != NO_ID) {
+            int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId, 3);
+            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
+                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
+        }
+    }
+
+    private void setSolidColorIfNeed(TypedArray typedArray) {
+        int solidColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NO_ID);
+        if (solidColorArrayId != NO_ID) {
+            int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId, 3);
+            setSolidColors(mResourcesHelper.getColor(solidColorResIds[0]),
+                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
+            return;
+        }
+        int color = typedArray.getColor(R.styleable.ButtonView_solidColor, 0);
+        if (color != 0) {
+            setSolidColors(color, color, color);
+        }
+    }
+
+    private void setBackgroundDrawablesIfNeed(TypedArray typedArray) {
+        int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NO_ID);
+        if (drawableArrayId != NO_ID) {
+            int[] drawableResIds = mResourcesHelper.getResIdArray(drawableArrayId, 3);
+            setBackgroundDrawables(mResourcesHelper.getDrawable(drawableResIds[0]),
+                    mResourcesHelper.getDrawable(drawableResIds[1]),
+                    mResourcesHelper.getDrawable(drawableResIds[2]));
+        }
     }
 
     @Override
@@ -139,46 +188,12 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    private void setSolidColorEntries(int solidColorArrayId) {
-        if (solidColorArrayId != NO_ID) {
-            int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId, 3);
-            setSolidColors(mResourcesHelper.getColor(solidColorResIds[0]),
-                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
-        }
-    }
-
-    private void setDrawableEntries(int drawableArrayId) {
-        if (drawableArrayId != NO_ID) {
-            int[] drawableResIds = mResourcesHelper.getResIdArray(drawableArrayId, 3);
-            setBackgroundDrawables(mResourcesHelper.getDrawable(drawableResIds[0]),
-                    mResourcesHelper.getDrawable(drawableResIds[1]),
-                    mResourcesHelper.getDrawable(drawableResIds[2]));
-        }
-    }
-
-    private void setTextColorEntries(int textColorArrayId) {
-        if (textColorArrayId != NO_ID) {
-            int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId, 3);
-            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
-                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
-        }
-    }
-
-    private void setStrokeColorEntries(int strokeColorArrayId) {
-        if (strokeColorArrayId != NO_ID) {
-            int[] strokeColorsResIds = mResourcesHelper.getResIdArray(strokeColorArrayId, 3);
-            setStrokeColors(mResourcesHelper.getColor(strokeColorsResIds[0])
-                    , mResourcesHelper.getColor(strokeColorsResIds[1]), mResourcesHelper.getColor(strokeColorsResIds[2]));
-        }
-    }
-
     public ButtonView setStrokeColors(int normal, int pressed, int selected) {
         mNormalStrokeColor = normal;
         mPressedStrokeColor = pressed;
         mSelectedStrokeColor = selected;
         return this;
     }
-
 
     public ButtonView setShape(ButtonShape shape) {
         mBackgroundShape = shape.getValue();

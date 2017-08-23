@@ -32,14 +32,14 @@ import static com.sheaye.util.Const.NULL;
  *
  * R.styleable.ButtonView_strokeColor 外围线框颜色，有了颜色才会出现外框，此为单色，不随state变化
  *
- * R.styleable.ButtonView_strokeColorEntries 外围线框颜色集合，有了颜色才会出现外框，遵循“点击顺序”
+ * R.styleable.ButtonView_strokeColorEntries 外围线框颜色集合，有了颜色才会出现外框，随state变化，遵循“点击顺序”
  *
  * R.styleable.ButtonView_strokeWidth 外围线框的宽度，默认为1px
-
+ *
  * R.styleable.ButtonView_backgroundDrawableEntries 背景图集合，图片随state变化，遵循“点击顺序”
-
+ *
  * R.styleable.ButtonView_textColorEntries 文字颜色集合，颜色随state变化，遵循“点击顺序”
-
+ *
  * R.styleable.ButtonView_compoundIcon 附带的静态图片，不随state变化，
  *
  * R.styleable.ButtonView_compoundIconWidth 附带图片的宽度，默认情况下，图文呈竖直方向时约等于文本宽度，水平方向时随高度等比缩放

@@ -6,6 +6,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 
+import static com.sheaye.util.Const.NULL;
+
 /**
  * Created by yexinyan on 2017/8/20.
  */
@@ -13,16 +15,22 @@ import android.graphics.drawable.shapes.Shape;
 public class ShapeDrawableFactory {
 
     private static void drawRoundRect(Canvas canvas, Paint paint, float radius, int solidColor, int strokeWidth, int strokeColor) {
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-        if (strokeWidth != 0) {
+        int left = 0, top = 0;
+        int right = canvas.getWidth();
+        int bottom = canvas.getHeight();
+        if (strokeColor != NULL) {
             paint.setColor(strokeColor);
-            RectF outerRectF = new RectF(0, 0, width, height);
+            RectF outerRectF = new RectF(left, top, right, bottom);
             canvas.drawRoundRect(outerRectF, radius, radius, paint);
+            left += strokeWidth;
+            top += strokeWidth;
+            right -= strokeWidth;
+            bottom -= strokeWidth;
+            radius -= strokeWidth;
         }
-        RectF innerRectF = new RectF(strokeWidth, strokeWidth, width - strokeWidth, height - strokeWidth);
+        RectF innerRectF = new RectF(left, top, right, bottom);
         paint.setColor(solidColor);
-        canvas.drawRoundRect(innerRectF, radius - strokeWidth, radius - strokeWidth, paint);
+        canvas.drawRoundRect(innerRectF, radius, radius, paint);
     }
 
     public static ShapeDrawable createCircleRect(final int solidColor, final int strokeWidth, final int strokeColor) {
@@ -52,12 +60,13 @@ public class ShapeDrawableFactory {
                 float cx = getWidth() / 2;
                 float cy = getHeight() / 2;
                 float radius = Math.min(cx, cy);
-                if (strokeWidth != 0) {
+                if (strokeColor != NULL) {
                     paint.setColor(strokeColor);
                     canvas.drawCircle(cx, cy, radius, paint);
+                    radius -= strokeWidth;
                 }
                 paint.setColor(solidColor);
-                canvas.drawCircle(cx, cy, radius - strokeWidth, paint);
+                canvas.drawCircle(cx, cy, radius, paint);
             }
         };
         return new ShapeDrawable(shape);

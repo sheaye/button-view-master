@@ -73,9 +73,7 @@
             android:textSize="20sp"
             android:onClick="onClick"
             app:cornerRadius="5dp"
-            app:solidColor="@android:color/white"
             app:strokeColorEntries="@array/strokeColors"
-            app:strokeWidth="1dp"
             app:textColorEntries="@array/textColors"
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="left"
@@ -128,6 +126,20 @@
             app:compoundIconGravity="bottom"
             android:onClick="onClick"
             app:compoundPadding="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="以下使用动态设置"/>
+
+        <com.sheaye.widget.ButtonView
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="动态设置"
+            android:padding="10dp"
+            android:layout_margin="30dp"
+            android:onClick="onClick"/>
 
     </LinearLayout>
 

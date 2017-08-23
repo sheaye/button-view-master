@@ -93,14 +93,14 @@ public class ButtonView extends AppCompatButton {
         mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NULL) {
             int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
-            setCompoundDrawables(mResourcesHelper.getDrawable(resIdArray[0]),
+            setCompoundIcons(mResourcesHelper.getDrawable(resIdArray[0]),
                     mResourcesHelper.getDrawable(resIdArray[1]),
                     mResourcesHelper.getDrawable(resIdArray[2]), gravity);
             return;
         }
         Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
         if (compoundIcon != null) {
-            setCompoundDrawables(compoundIcon, null, null, gravity);
+            setCompoundIcons(compoundIcon, null, null, gravity);
         }
     }
 
@@ -182,8 +182,8 @@ public class ButtonView extends AppCompatButton {
         setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);
     }
 
-    public ButtonView setCompoundDrawables(@DrawableRes int normal, @DrawableRes int pressed, @DrawableRes int selected, int gravity) {
-        return setCompoundDrawables(
+    public ButtonView setCompoundIcons(@DrawableRes int normal, @DrawableRes int pressed, @DrawableRes int selected, int gravity) {
+        return setCompoundIcons(
                 mResourcesHelper.getDrawable(normal),
                 mResourcesHelper.getDrawable(pressed),
                 mResourcesHelper.getDrawable(selected),
@@ -191,7 +191,7 @@ public class ButtonView extends AppCompatButton {
 
     }
 
-    public ButtonView setCompoundDrawables(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
+    public ButtonView setCompoundIcons(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
         mCompoundDrawable = SelectorFactory.createDrawableSelector(compoundIcon, compoundIconPressed, compoundIconSelected);
         switch (gravity) {
             case 2:// top

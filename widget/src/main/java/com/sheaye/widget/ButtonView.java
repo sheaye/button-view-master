@@ -2,12 +2,14 @@ package com.sheaye.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.view.Gravity;
 
 import com.sheaye.util.ResourcesHelper;
 import com.sheaye.util.SelectorFactory;
@@ -15,7 +17,21 @@ import com.sheaye.util.ShapeDrawableFactory;
 
 /**
  * Created by yexinyan on 2017/8/20.
+ * 
+ * R.styleable.ButtonView_shape
+ * R.styleable.ButtonView_cornerRadius
+ * R.styleable.ButtonView_solidColorEntries
+ * R.styleable.ButtonView_drawableEntries
+ * R.styleable.ButtonView_textColorEntries
+ * R.styleable.ButtonView_strokeColorEntries
+ * R.styleable.ButtonView_strokeWidth
+ * R.styleable.ButtonView_compoundIcon
+ * R.styleable.ButtonView_compoundIconPressed
+ * R.styleable.ButtonView_compoundIconSelected
+ * R.styleable.ButtonView_compoundIconGravity
  */
+
+
 
 public class ButtonView extends AppCompatButton {
 
@@ -37,6 +53,11 @@ public class ButtonView extends AppCompatButton {
     private int mBackgroundShape;
 
     protected ResourcesHelper mResourcesHelper;
+    protected Drawable mDrawableLeft;
+    protected Drawable mDrawableTop;
+    protected Drawable mDrawableRight;
+    protected Drawable mDrawableBottom;
+    protected StateListDrawable mCompoundDrawable;
 
     public ButtonView(Context context) {
         this(context, null);
@@ -71,8 +92,51 @@ public class ButtonView extends AppCompatButton {
             setStrokeColorEntries(strokeColorArrayId);
         }
 
+        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
+        Drawable compoundIconPressed = typedArray.getDrawable(R.styleable.ButtonView_compoundIconPressed);
+        Drawable compoundIconSelected = typedArray.getDrawable(R.styleable.ButtonView_compoundIconSelected);
+        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 1);
+        setCompoundIcons(compoundIcon, compoundIconPressed, compoundIconSelected, gravity);
+
         typedArray.recycle();
         commit();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mCompoundDrawable != null) {
+            mCompoundDrawable.setBounds(0, 0, 100, 100);
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);
+    }
+
+    public ButtonView setCompoundIcons(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
+        mCompoundDrawable = SelectorFactory.createDrawableSelector(compoundIcon, compoundIconPressed, compoundIconSelected);
+        switch (gravity) {
+            case 2:// top
+            case Gravity.TOP:
+                mDrawableTop = mCompoundDrawable;
+                break;
+            case 3://right
+            case Gravity.RIGHT:
+                mDrawableRight = mCompoundDrawable;
+                break;
+            case 4://bottom
+            case Gravity.BOTTOM:
+                mDrawableBottom = mCompoundDrawable;
+                break;
+            default:
+                mDrawableLeft = mCompoundDrawable;
+                break;
+        }
+        setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);
+        return this;
     }
 
     private void setSolidColorEntries(int solidColorArrayId) {
@@ -168,6 +232,7 @@ public class ButtonView extends AppCompatButton {
         }
         StateListDrawable selector = SelectorFactory.createDrawableSelector(mNormalBackgroundDrawable, mPressedBackgroundDrawable, mSelectedBackgroundDrawable);
         ViewCompat.setBackground(this, selector);
+        invalidate();
     }
 
 }

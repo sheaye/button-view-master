@@ -15,7 +15,7 @@
         <attr name="compoundIcon" format="reference"/>
         <attr name="compoundIconPressed" format="reference"/>
         <attr name="compoundIconSelected" format="reference"/>
-        <attr name="iconGravity" format="enum">
+        <attr name="compoundIconGravity" format="enum">
             <enum name="left" value="1"/>
             <enum name="top" value="2"/>
             <enum name="right" value="3"/>

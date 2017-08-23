@@ -21,6 +21,36 @@ import static com.sheaye.util.Const.NULL;
 
 /**
  * Created by yexinyan on 2017/8/20.
+ *
+ * 名词定义：“点击顺序”：数组中从左到右依次为state_normal,state_pressed,state_selected
+ * 
+ * R.styleable.ButtonView_cornerRadius 设置圆角半径，仅当shape为rectangle时有效
+ *
+ * R.styleable.ButtonView_solidColor 填充部分的背景色，单色，不随state变化，默认为白色
+ *
+ * R.styleable.ButtonView_solidColorEntries 填充部分的背景色集合，随state变化，最多3个,默认全为白色,遵循“点击顺序”
+ *
+ * R.styleable.ButtonView_strokeColor 外围线框颜色，有了颜色才会出现外框，此为单色，不随state变化
+ *
+ * R.styleable.ButtonView_strokeColorEntries 外围线框颜色集合，有了颜色才会出现外框，遵循“点击顺序”
+ *
+ * R.styleable.ButtonView_strokeWidth 外围线框的宽度，默认为1px
+
+ * R.styleable.ButtonView_backgroundDrawableEntries 背景图集合，图片随state变化，遵循“点击顺序”
+
+ * R.styleable.ButtonView_textColorEntries 文字颜色集合，颜色随state变化，遵循“点击顺序”
+
+ * R.styleable.ButtonView_compoundIcon 附带的静态图片，不随state变化，
+ *
+ * R.styleable.ButtonView_compoundIconWidth 附带图片的宽度，默认情况下，图文呈竖直方向时约等于文本宽度，水平方向时随高度等比缩放
+ *
+ * R.styleable.ButtonView_compoundIconHeight 附带图片的高度，默认情况下，图片呈水平方向时约等于文本行高，竖直方向时随宽度等比缩放
+ *
+ * R.styleable.ButtonView_compoundIconEntries 附带的图片集，随state变化，遵循“点击顺序”
+ *
+ * R.styleable.ButtonView_compoundIconGravity 附带图片的位置，只有左、上、右、下四种位置，默认为左
+ *
+ * R.styleable.ButtonView_compoundPadding 附带图片与文字的间隔
  */
 
 
@@ -86,7 +116,7 @@ public class ButtonView extends AppCompatButton {
 
     private void setCompoundIconIfNeed(TypedArray typedArray) {
         int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
-        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 1);
+        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, Gravity.LEFT);
         int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
         setCompoundDrawablePadding(compoundPadding);
         mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);

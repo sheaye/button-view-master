@@ -104,7 +104,6 @@
             android:text="RIGHT"
             android:textSize="20sp"
             app:cornerRadius="5dp"
-            app:solidColor="@color/colorLightGray"
             app:textColorEntries="@array/textColors"
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="right"

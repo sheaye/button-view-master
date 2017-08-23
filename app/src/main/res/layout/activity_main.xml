@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,45 +7,69 @@
     android:orientation="vertical"
     tools:context="com.sheaye.sample.MainActivity">
 
-    <com.sheaye.widget.ButtonView
-        app:textColorEntries="@array/textColors"
-        android:text="rectangle"
-        android:gravity="center"
-        android:drawableLeft="@drawable/ic_pressed"
-        style="@style/ButtonView" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
 
-    <com.sheaye.widget.ButtonView
-        app:shape="rectangle"
-        app:cornerRadius="10dp"
-        app:strokeColorEntries="@array/strokeColors"
-        app:solidColorEntries="@array/solidColors"
-        app:strokeWidth="5dp"
-        android:text="roundRectangle"
-        style="@style/ButtonView"/>
+        <com.sheaye.widget.ButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:text="rectangle_button"
+            app:shape="rectangle"
+            app:cornerRadius="5dp"
+            app:textColorEntries="@array/textColors"
+            app:solidColorEntries="@array/solidColors"/>
 
-    <com.sheaye.widget.ButtonView
-        app:compoundIconEntries="@array/drawables"
-        app:textColorEntries="@array/textColors"
-        android:text="roundRectangle"
-        style="@style/ButtonView"/>
+        <com.sheaye.widget.ButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:text="circle_rectangle_button"
+            app:shape="circleRect"
+            app:textColorEntries="@array/textColors"
+            app:solidColorEntries="@array/solidColors"/>
 
-    <com.sheaye.widget.ButtonView
-        app:shape="circleRect"
-        app:solidColorEntries="@array/solidColors"
-        android:text="circleRectangle"
-        style="@style/ButtonView"/>
+        <com.sheaye.widget.ButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:text="circle_button"
+            app:shape="circle"
+            android:gravity="center"
+            app:textColorEntries="@array/textColors"
+            app:solidColorEntries="@array/solidColors"/>
 
-    <com.sheaye.widget.ButtonView
-        app:shape="circle"
-        app:solidColorEntries="@array/solidColors"
-        android:text="circle"
-        style="@style/ButtonView"/>
+        <com.sheaye.widget.ButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:text="button_with_stroke"
+            app:shape="rectangle"
+            app:cornerRadius="5dp"
+            app:textColorEntries="@array/textColors"
+            app:solidColorEntries="@array/solidColors"
+            app:strokeWidth="1dp"
+            app:strokeColorEntries="@array/strokeColors"/>
 
-    <com.sheaye.widget.ButtonView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:shape="circle"
-        app:backgroundDrawableEntries="@array/drawables"
-        style="@style/ButtonView"/>
+        <com.sheaye.widget.ButtonView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:text="compound_button"
+            app:compoundIconEntries="@array/drawables"
+            app:textColorEntries="@array/textColors"
+            app:compoundIconGravity="left"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>

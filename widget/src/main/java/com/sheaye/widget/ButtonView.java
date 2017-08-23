@@ -154,6 +154,10 @@ public class ButtonView extends AppCompatButton {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mBackgroundShape == SHAPE_CIRCLE) {
+            int diameter = Math.max(getMeasuredWidth(), getMeasuredHeight());
+            setMeasuredDimension(diameter, diameter);
+        }
         if (mCompoundDrawable != null) {
             mCompoundDrawable.setBounds(0, 0, 100, 100);
         }

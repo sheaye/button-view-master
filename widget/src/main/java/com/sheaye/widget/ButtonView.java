@@ -109,12 +109,12 @@ public class ButtonView extends AppCompatButton {
         mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NULL) {
             @DrawableRes int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
-            setCompoundIcons(gravity,resIdArray);
+            setCompoundIcons(gravity, resIdArray);
             return;
         }
         Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
         if (compoundIcon != null) {
-            setCompoundIcons(gravity,compoundIcon);
+            setCompoundIcons(gravity, compoundIcon);
         }
     }
 
@@ -150,10 +150,8 @@ public class ButtonView extends AppCompatButton {
             }
             return;
         }
-        int color = typedArray.getColor(R.styleable.ButtonView_solidColor, NULL);
-        if (color != NULL) {
-            setSolidColor(color);
-        }
+        int color = typedArray.getColor(R.styleable.ButtonView_solidColor, Color.LTGRAY);
+        setSolidColor(color);
     }
 
     private void setBackgroundDrawablesIfNeed(TypedArray typedArray) {
@@ -197,7 +195,7 @@ public class ButtonView extends AppCompatButton {
 
     public ButtonView setCompoundIcons(int gravity, @DrawableRes int... drawableRes) {
         return setCompoundIcons(
-                gravity,mResourcesHelper.getDrawables(drawableRes));
+                gravity, mResourcesHelper.getDrawables(drawableRes));
 
     }
 
@@ -303,6 +301,9 @@ public class ButtonView extends AppCompatButton {
     public void commit() {
         if (mBackgroundDrawables != null) {
             ViewCompat.setBackground(this, SelectorFactory.createDrawableSelector(mBackgroundDrawables));
+            return;
+        }
+        if (getBackground()!=null) {
             return;
         }
         Drawable[] shapeDrawables = new Drawable[3];

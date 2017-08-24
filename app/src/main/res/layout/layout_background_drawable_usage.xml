@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_button_view_with_xml">
+
+    <TextView
+        android:text="BackgroundDrawable"
+        style="@style/TitleStyle" />
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            app:backgroundDrawableEntries="@array/drawables"/>
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            android:background="@drawable/ic_selected"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

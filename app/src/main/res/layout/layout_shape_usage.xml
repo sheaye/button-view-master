@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_button_view_with_xml">
+
+    <TextView
+        android:text="shape"
+        style="@style/TitleStyle" />
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <TextView
+            android:text="矩形:"
+            style="@style/LabelStyle" />
+
+        <com.sheaye.widget.ButtonView
+            app:shape="rectangle"
+            style="@style/ButtonStyle" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <TextView
+            style="@style/LabelStyle"
+            android:text="圆角矩形:" />
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            app:shape="rectangle"
+            app:cornerRadius="5dp"
+            app:solidColor="@color/colorAccent"
+            android:textColor="@color/colorWhite"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <TextView
+            style="@style/LabelStyle"
+            android:text="圆矩形:" />
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            app:shape="circleRect" />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <TextView
+            style="@style/LabelStyle"
+            android:text="圆形:" />
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            app:shape="circle" />
+
+    </LinearLayout>
+
+</LinearLayout>

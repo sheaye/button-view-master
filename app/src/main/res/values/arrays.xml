@@ -21,6 +21,13 @@
     <array name="strokeColors">
         <item>@color/colorBlack</item>
         <item>@color/colorLightBlack</item>
-        <item>@color/colorWhite</item>
+        <item>@color/colorPrimaryDark</item>
     </array>
+
+    <array name="textColorForCompound">
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimaryDark</item>
+        <item>@color/colorAccent</item>
+    </array>
+
 </resources>

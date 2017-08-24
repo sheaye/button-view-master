@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_button_view_with_xml">
+
+    <TextView
+        android:text="stroke and text"
+        style="@style/TitleStyle" />
+
+    <LinearLayout style="@style/LayoutStyle">
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            app:shape="rectangle"
+            app:cornerRadius="5dp"
+            app:solidColorEntries="@array/solidColors"
+            app:textColorEntries="@array/textColors"
+            app:strokeColorEntries="@array/strokeColors"
+            app:strokeWidth="2dp"/>
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            app:shape="circleRect"
+            app:cornerRadius="5dp"
+            app:solidColorEntries="@array/solidColors"
+            app:textColorEntries="@array/textColors"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="2dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

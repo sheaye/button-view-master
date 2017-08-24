@@ -9,6 +9,6 @@
     <color name="colorRed">#FF4081</color>
 
     <color name="colorBlack">@android:color/black</color>
-    <color name="colorLightBlack">#262626</color>
+    <color name="colorLightBlack">#bfbebe</color>
     <color name="colorWhite">@android:color/white</color>
 </resources>

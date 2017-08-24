@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 
 import static com.sheaye.util.Const.NULL;
@@ -32,6 +33,15 @@ public class ResourcesHelper {
         return ResourcesCompat.getColor(mResources, colorRes, null);
     }
 
+    public int[] getColors(@NonNull int... colorRes) {
+        int len = colorRes.length;
+        int[] colors = new int[len];
+        for (int i = 0; i < len; i++) {
+            colors[i] = getColor(colorRes[i]);
+        }
+        return colors;
+    }
+
     public Drawable getDrawable(int drawableRes) {
         if (drawableRes == NULL) {
             return null;
@@ -39,8 +49,17 @@ public class ResourcesHelper {
         return ResourcesCompat.getDrawable(mResources, drawableRes, null);
     }
 
+    public Drawable[] getDrawables(@NonNull int... drawableRes){
+        int len = drawableRes.length;
+        Drawable[] drawables = new Drawable[len];
+        for (int i = 0; i < len; i++) {
+            drawables[i] = getDrawable(drawableRes[i]);
+        }
+        return drawables;
+    }
+
     public int[] getResIdArray(@ArrayRes int arrayId) {
-        if (arrayId != NULL) {
+        if (arrayId == NULL) {
             return null;
         }
         TypedArray typedArray = mResources.obtainTypedArray(arrayId);

@@ -22,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
         mButton1 = ((ButtonView) findViewById(R.id.button1));
         mResourceHelper = new ResourcesHelper(this);
         mButton1.setShape(ButtonShape.CIRCLE_RECT)
-                .setStrokeColors(Color.BLUE, Color.DKGRAY, Color.GREEN)
+                .setStrokeColor(Color.BLUE, Color.DKGRAY, Color.GREEN)
                 .setStrokeWidth(15)
                 .setTextColors(Color.BLUE, Color.DKGRAY, Color.GREEN)
-                .setSolidColors(Color.WHITE, Color.YELLOW, Color.RED)
+                .setSolidColor(Color.WHITE, Color.YELLOW, Color.RED)
                 .setCompoundIcons(R.drawable.ic_normal, R.drawable.ic_pressed, R.drawable.ic_selected, Gravity.RIGHT)
                 .setCompoundPadding(30)
                 .commit();

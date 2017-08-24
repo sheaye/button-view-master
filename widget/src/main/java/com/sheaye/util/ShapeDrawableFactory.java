@@ -29,7 +29,9 @@ public class ShapeDrawableFactory {
             radius -= strokeWidth;
         }
         RectF innerRectF = new RectF(left, top, right, bottom);
-        paint.setColor(solidColor);
+        if (solidColor != NULL) {
+            paint.setColor(solidColor);
+        }
         canvas.drawRoundRect(innerRectF, radius, radius, paint);
     }
 

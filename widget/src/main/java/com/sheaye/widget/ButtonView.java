@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
@@ -21,35 +22,35 @@ import static com.sheaye.util.Const.NULL;
 
 /**
  * Created by yexinyan on 2017/8/20.
- *
+ * <p>
  * 名词定义：“点击顺序”：数组中从左到右依次为state_normal,state_pressed,state_selected
- * 
+ * <p>
  * R.styleable.ButtonView_cornerRadius 设置圆角半径，仅当shape为rectangle时有效
- *
+ * <p>
  * R.styleable.ButtonView_solidColor 填充部分的背景色，单色，不随state变化，默认为白色
- *
+ * <p>
  * R.styleable.ButtonView_solidColorEntries 填充部分的背景色集合，随state变化，最多3个,默认全为白色,遵循“点击顺序”
- *
+ * <p>
  * R.styleable.ButtonView_strokeColor 外围线框颜色，有了颜色才会出现外框，此为单色，不随state变化
- *
+ * <p>
  * R.styleable.ButtonView_strokeColorEntries 外围线框颜色集合，有了颜色才会出现外框，随state变化，遵循“点击顺序”
- *
+ * <p>
  * R.styleable.ButtonView_strokeWidth 外围线框的宽度，默认为1px
- *
+ * <p>
  * R.styleable.ButtonView_backgroundDrawableEntries 背景图集合，图片随state变化，遵循“点击顺序”
- *
+ * <p>
  * R.styleable.ButtonView_textColorEntries 文字颜色集合，颜色随state变化，遵循“点击顺序”
- *
+ * <p>
  * R.styleable.ButtonView_compoundIcon 附带的静态图片，不随state变化，
- *
+ * <p>
  * R.styleable.ButtonView_compoundIconWidth 附带图片的宽度，默认情况下，图文呈竖直方向时约等于文本宽度，水平方向时随高度等比缩放
- *
+ * <p>
  * R.styleable.ButtonView_compoundIconHeight 附带图片的高度，默认情况下，图片呈水平方向时约等于文本行高，竖直方向时随宽度等比缩放
- *
+ * <p>
  * R.styleable.ButtonView_compoundIconEntries 附带的图片集，随state变化，遵循“点击顺序”
- *
+ * <p>
  * R.styleable.ButtonView_compoundIconGravity 附带图片的位置，只有左、上、右、下四种位置，默认为左
- *
+ * <p>
  * R.styleable.ButtonView_compoundPadding 附带图片与文字的间隔
  */
 
@@ -64,16 +65,23 @@ public class ButtonView extends AppCompatButton {
     private static final int VERTICAL = 1;
 
     private int mRadius;
-    private int mNormalSolidColor;
-    private int mPressedSolidColor;
-    private int mSelectedSolidColor;
-    private Drawable mNormalBackgroundDrawable;
-    private Drawable mPressedBackgroundDrawable;
-    private Drawable mSelectedBackgroundDrawable;
+    private int[] mSolidColors = new int[3];
+    //    private int mNormalSolidColor;
+//    private int mPressedSolidColor;
+//    private int mSelectedSolidColor;
+
+    private Drawable[] mBackgroundDrawables;
+
+//    private Drawable mNormalBackgroundDrawable;
+//    private Drawable mPressedBackgroundDrawable;
+//    private Drawable mSelectedBackgroundDrawable;
+
     private int mStrokeWidth;
-    private int mNormalStrokeColor;
-    private int mPressedStrokeColor;
-    private int mSelectedStrokeColor;
+
+    private int[] mStrokeColors = new int[3];
+    //    private int mNormalStrokeColor;
+//    private int mPressedStrokeColor;
+//    private int mSelectedStrokeColor;
     private int mBackgroundShape;
 
     private ResourcesHelper mResourcesHelper;
@@ -139,13 +147,13 @@ public class ButtonView extends AppCompatButton {
         if (strokeColorArrayId != NULL) {
             mStrokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 1);
             int[] strokeColorsResIds = mResourcesHelper.getResIdArray(strokeColorArrayId, 3);
-            setStrokeColors(mResourcesHelper.getColor(strokeColorsResIds[0])
+            setStrokeColor(mResourcesHelper.getColor(strokeColorsResIds[0])
                     , mResourcesHelper.getColor(strokeColorsResIds[1]), mResourcesHelper.getColor(strokeColorsResIds[2]));
         } else {
             int strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, NULL);
             if (strokeColor != NULL) {
                 setStrokeWidth((int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 1));
-                setStrokeColors(strokeColor, strokeColor, strokeColor);
+                setStrokeColor(strokeColor, strokeColor, strokeColor);
             }
         }
     }
@@ -153,23 +161,28 @@ public class ButtonView extends AppCompatButton {
     private void setTextColorsIfNeed(TypedArray typedArray) {
         int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NULL);
         if (textColorArrayId != NULL) {
-            int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId, 3);
-            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
-                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
+            int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId);
+            setTextColors(mResourcesHelper.getColors(textColorResIds));
+//            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
+//                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
+
         }
     }
 
     private void setSolidColorIfNeed(TypedArray typedArray) {
         int solidColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NULL);
         if (solidColorArrayId != NULL) {
-            int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId, 3);
-            setSolidColors(mResourcesHelper.getColor(solidColorResIds[0]),
-                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
+            int[] solidColorResIds = mResourcesHelper.getResIdArray(solidColorArrayId);
+            if (solidColorResIds != null) {
+                setSolidColor(mResourcesHelper.getColors(solidColorResIds));
+            }
+//            setSolidColor(mResourcesHelper.getColor(solidColorResIds[0]),
+//                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
             return;
         }
         int color = typedArray.getColor(R.styleable.ButtonView_solidColor, NULL);
         if (color != NULL) {
-            setSolidColors(color, color, color);
+            setSolidColor(color);
         }
     }
 
@@ -249,12 +262,23 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setStrokeColors(int normal, int pressed, int selected) {
-        mNormalStrokeColor = normal;
-        mPressedStrokeColor = pressed;
-        mSelectedStrokeColor = selected;
+    public ButtonView setStrokeColor(@NonNull int... strokeColor) {
+        if (strokeColor.length > 3) {
+            throw new IllegalArgumentException("strokeColor值最多只支持3个");
+        }
+        for (int i = 0; i < mStrokeColors.length; i++) {
+            mStrokeColors[i] = strokeColor[0];
+        }
+        System.arraycopy(strokeColor, 1, mStrokeColors, 1, strokeColor.length - 1);
         return this;
     }
+
+//    public ButtonView setStrokeColor(int normal, int pressed, int selected) {
+//        mNormalStrokeColor = normal;
+//        mPressedStrokeColor = pressed;
+//        mSelectedStrokeColor = selected;
+//        return this;
+//    }
 
     public ButtonView setShape(ButtonShape shape) {
         mBackgroundShape = shape.getValue();
@@ -280,33 +304,51 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setSolidColors(int normal, int pressed, int selected) {
+    /*public ButtonView setSolidColor(int normal, int pressed, int selected) {
         mNormalSolidColor = normal;
         mPressedSolidColor = pressed;
         mSelectedSolidColor = selected;
         return this;
-    }
+    }*/
 
-    public ButtonView setTextColors(int normal, int pressed, int selected) {
-        setTextColor(SelectorFactory.createColorSelector(normal, pressed, selected));
+    /**
+     * @param color 最多支持3个，依次为state_normal,state_pressed,state_selected
+     */
+    public ButtonView setSolidColor(@NonNull int... color) {
+//      初始化mSolidColors
+        for (int i = 0; i < mSolidColors.length; i++) {
+            mSolidColors[i] = color[0];
+        }
+        System.arraycopy(color, 1, mSolidColors, 1, color.length - 1);
         return this;
     }
 
-    public ButtonView setBackgroundDrawables(Drawable normal, Drawable pressed, Drawable selected) {
-        mNormalBackgroundDrawable = normal;
-        mPressedBackgroundDrawable = pressed;
-        mSelectedBackgroundDrawable = selected;
+    public ButtonView setTextColors(@NonNull int... color) {
+        setTextColor(SelectorFactory.createColorSelector(color));
         return this;
     }
 
-    public ButtonView setBackgroundDrawbales(@DrawableRes int normal, @DrawableRes int pressed, @DrawableRes int selected) {
-        return setBackgroundDrawables(
-                mResourcesHelper.getDrawable(normal),
-                mResourcesHelper.getDrawable(pressed),
-                mResourcesHelper.getDrawable(selected));
+//    public ButtonView setBackgroundDrawables(Drawable normal, Drawable pressed, Drawable selected) {
+//        mNormalBackgroundDrawable = normal;
+//        mPressedBackgroundDrawable = pressed;
+//        mSelectedBackgroundDrawable = selected;
+//        return this;
+//    }
+
+    /**
+     * @param backgroundDrawables 背景图，最多不能超过3个
+     * @return
+     */
+    public ButtonView setBackgroundDrawables(Drawable... backgroundDrawables) {
+        mBackgroundDrawables = backgroundDrawables;
+        return this;
     }
 
-    public void commit() {
+    public ButtonView setBackgroundDrawbales(@DrawableRes int... drawableRes) {
+        return setBackgroundDrawables(mResourcesHelper.getDrawables(drawableRes));
+    }
+
+    /*public void commit() {
         Drawable normal = mNormalBackgroundDrawable != null ? mNormalBackgroundDrawable :
                 getShape(mNormalStrokeColor, mNormalSolidColor);
         Drawable pressed = mPressedBackgroundDrawable != null ? mPressedBackgroundDrawable :
@@ -315,7 +357,21 @@ public class ButtonView extends AppCompatButton {
                 getShape(mSelectedStrokeColor, mSelectedSolidColor);
         StateListDrawable selector = SelectorFactory.createDrawableSelector(normal, pressed, selected);
         ViewCompat.setBackground(this, selector);
+    }*/
+
+    public void commit() {
+        if (mBackgroundDrawables != null) {
+            ViewCompat.setBackground(this,SelectorFactory.createDrawableSelector(mBackgroundDrawables));
+            return;
+        }
+        Drawable[] shapeDrawables = new Drawable[3];
+        for (int i = 0; i < shapeDrawables.length; i++) {
+            shapeDrawables[i] = getShape(mStrokeColors[i],mSolidColors[i]);
+        }
+        StateListDrawable selector = SelectorFactory.createDrawableSelector(shapeDrawables);
+        ViewCompat.setBackground(this, selector);
     }
+
 
     public ButtonView setStrokeWidth(int strokeWidth) {
         this.mStrokeWidth = strokeWidth;

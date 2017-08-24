@@ -108,7 +108,7 @@ public class ButtonView extends AppCompatButton {
         mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
         mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NULL) {
-            @DrawableRes int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
+            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
             setCompoundIcons(gravity, resIdArray);
             return;
         }
@@ -193,7 +193,7 @@ public class ButtonView extends AppCompatButton {
         }
     }
 
-    public ButtonView setCompoundIcons(int gravity, @DrawableRes int... drawableRes) {
+    public ButtonView setCompoundIcons(int gravity, int... drawableRes) {
         return setCompoundIcons(
                 gravity, mResourcesHelper.getDrawables(drawableRes));
 

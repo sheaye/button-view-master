@@ -30,4 +30,11 @@
         <item>@color/colorAccent</item>
     </array>
 
+    <array name="shapes">
+        <item>rectangle</item>
+        <item>circleRectangle</item>
+        <item>circle</item>
+    </array>
+
+
 </resources>

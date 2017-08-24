@@ -7,20 +7,20 @@
     </array>
 
     <array name="solidColors">
-        <item>@android:color/holo_red_light</item>
-        <item>@android:color/holo_red_dark</item>
-        <item>@android:color/holo_blue_bright</item>
+        <item>@color/colorLightGray</item>
+        <item>@color/colorDarkGray</item>
+        <item>@color/colorRed</item>
     </array>
 
     <array name="textColors">
-        <item>@android:color/black</item>
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_red_light</item>
+        <item>@color/colorBlack</item>
+        <item>@color/colorLightBlack</item>
+        <item>@color/colorWhite</item>
     </array>
 
     <array name="strokeColors">
-        <item>@android:color/holo_blue_bright</item>
-        <item>@android:color/holo_green_light</item>
-        <item>@android:color/holo_red_light</item>
+        <item>@color/colorBlack</item>
+        <item>@color/colorLightBlack</item>
+        <item>@color/colorWhite</item>
     </array>
 </resources>

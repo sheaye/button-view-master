@@ -3,5 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="colorLightGray">#CCCCCC</color>
+    <color name="colorDarkGray">#969696</color>
+    <color name="colorRed">#FF4081</color>
+
+    <color name="colorBlack">@android:color/black</color>
+    <color name="colorLightBlack">#262626</color>
+    <color name="colorWhite">@android:color/white</color>
 </resources>

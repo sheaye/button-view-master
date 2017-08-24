@@ -89,16 +89,13 @@ public class ButtonView extends AppCompatButton {
         setMinHeight(0);
         mResourcesHelper = new ResourcesHelper(context);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
-
         mBackgroundShape = typedArray.getInt(R.styleable.ButtonView_shape, SHAPE_RECTANGLE);
         setRadius(typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0));
-
         setSolidColorIfNeed(typedArray);
         setStrokeIfNeed(typedArray);
         setBackgroundDrawablesIfNeed(typedArray);
         setTextColorsIfNeed(typedArray);
         setCompoundIconIfNeed(typedArray);
-
         typedArray.recycle();
         commit();
     }

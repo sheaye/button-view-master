@@ -66,29 +66,13 @@ public class ButtonView extends AppCompatButton {
 
     private int mRadius;
     private int[] mSolidColors = new int[3];
-    //    private int mNormalSolidColor;
-//    private int mPressedSolidColor;
-//    private int mSelectedSolidColor;
-
     private Drawable[] mBackgroundDrawables;
-
-//    private Drawable mNormalBackgroundDrawable;
-//    private Drawable mPressedBackgroundDrawable;
-//    private Drawable mSelectedBackgroundDrawable;
-
     private int mStrokeWidth;
-
     private int[] mStrokeColors = new int[3];
-    //    private int mNormalStrokeColor;
-//    private int mPressedStrokeColor;
-//    private int mSelectedStrokeColor;
     private int mBackgroundShape;
 
     private ResourcesHelper mResourcesHelper;
-    private Drawable mDrawableLeft;
-    private Drawable mDrawableTop;
-    private Drawable mDrawableRight;
-    private Drawable mDrawableBottom;
+    private Drawable[] mCompoundDrawables;
     private StateListDrawable mCompoundDrawable;
     private int mCompoundIconWidth;
     private int mCompoundIconHeight;
@@ -147,8 +131,7 @@ public class ButtonView extends AppCompatButton {
         if (strokeColorArrayId != NULL) {
             mStrokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 1);
             int[] strokeColorsResIds = mResourcesHelper.getResIdArray(strokeColorArrayId, 3);
-            setStrokeColor(mResourcesHelper.getColor(strokeColorsResIds[0])
-                    , mResourcesHelper.getColor(strokeColorsResIds[1]), mResourcesHelper.getColor(strokeColorsResIds[2]));
+            setStrokeColor(mResourcesHelper.getColors(strokeColorsResIds));
         } else {
             int strokeColor = typedArray.getColor(R.styleable.ButtonView_strokeColor, NULL);
             if (strokeColor != NULL) {
@@ -163,9 +146,6 @@ public class ButtonView extends AppCompatButton {
         if (textColorArrayId != NULL) {
             int[] textColorResIds = mResourcesHelper.getResIdArray(textColorArrayId);
             setTextColors(mResourcesHelper.getColors(textColorResIds));
-//            setTextColors(mResourcesHelper.getColor(textColorResIds[0]),
-//                    mResourcesHelper.getColor(textColorResIds[1]), mResourcesHelper.getColor(textColorResIds[2]));
-
         }
     }
 
@@ -176,8 +156,6 @@ public class ButtonView extends AppCompatButton {
             if (solidColorResIds != null) {
                 setSolidColor(mResourcesHelper.getColors(solidColorResIds));
             }
-//            setSolidColor(mResourcesHelper.getColor(solidColorResIds[0]),
-//                    mResourcesHelper.getColor(solidColorResIds[1]), mResourcesHelper.getColor(solidColorResIds[2]));
             return;
         }
         int color = typedArray.getColor(R.styleable.ButtonView_solidColor, NULL);
@@ -190,9 +168,7 @@ public class ButtonView extends AppCompatButton {
         int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NULL);
         if (drawableArrayId != NULL) {
             int[] drawableResIds = mResourcesHelper.getResIdArray(drawableArrayId, 3);
-            setBackgroundDrawables(mResourcesHelper.getDrawable(drawableResIds[0]),
-                    mResourcesHelper.getDrawable(drawableResIds[1]),
-                    mResourcesHelper.getDrawable(drawableResIds[2]));
+            setBackgroundDrawables(mResourcesHelper.getDrawables(drawableResIds));
         }
     }
 
@@ -222,7 +198,9 @@ public class ButtonView extends AppCompatButton {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);
+        if (mCompoundDrawables != null) {
+            setCompoundDrawables(mCompoundDrawables[0], mCompoundDrawables[1], mCompoundDrawables[2], mCompoundDrawables[3]);
+        }
     }
 
     public ButtonView setCompoundIcons(@DrawableRes int normal, @DrawableRes int pressed, @DrawableRes int selected, int gravity) {
@@ -236,29 +214,29 @@ public class ButtonView extends AppCompatButton {
 
     public ButtonView setCompoundIcons(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
         mCompoundDrawable = SelectorFactory.createDrawableSelector(compoundIcon, compoundIconPressed, compoundIconSelected);
+        mCompoundDrawables = new Drawable[4];
         switch (gravity) {
             case 1:// top
             case Gravity.TOP:
-                mDrawableTop = mCompoundDrawable;
+                mCompoundDrawables[1] = mCompoundDrawable;
                 mCompoundOrientation = VERTICAL;
                 break;
             case 2://right
             case Gravity.END:
             case Gravity.RIGHT:
-                mDrawableRight = mCompoundDrawable;
+                mCompoundDrawables[2] = mCompoundDrawable;
                 mCompoundOrientation = HORIZONTAL;
                 break;
             case 3://bottom
             case Gravity.BOTTOM:
-                mDrawableBottom = mCompoundDrawable;
+                mCompoundDrawables[3] = mCompoundDrawable;
                 mCompoundOrientation = VERTICAL;
                 break;
             default:
-                mDrawableLeft = mCompoundDrawable;
+                mCompoundDrawables[0] = mCompoundDrawable;
                 mCompoundOrientation = HORIZONTAL;
                 break;
         }
-        setCompoundDrawables(mDrawableLeft, mDrawableTop, mDrawableRight, mDrawableBottom);
         return this;
     }
 
@@ -272,13 +250,6 @@ public class ButtonView extends AppCompatButton {
         System.arraycopy(strokeColor, 1, mStrokeColors, 1, strokeColor.length - 1);
         return this;
     }
-
-//    public ButtonView setStrokeColor(int normal, int pressed, int selected) {
-//        mNormalStrokeColor = normal;
-//        mPressedStrokeColor = pressed;
-//        mSelectedStrokeColor = selected;
-//        return this;
-//    }
 
     public ButtonView setShape(ButtonShape shape) {
         mBackgroundShape = shape.getValue();
@@ -304,17 +275,13 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    /*public ButtonView setSolidColor(int normal, int pressed, int selected) {
-        mNormalSolidColor = normal;
-        mPressedSolidColor = pressed;
-        mSelectedSolidColor = selected;
-        return this;
-    }*/
-
     /**
      * @param color 最多支持3个，依次为state_normal,state_pressed,state_selected
      */
     public ButtonView setSolidColor(@NonNull int... color) {
+        if (color.length > 3) {
+            throw new IllegalArgumentException("solid color值最多只支持3个");
+        }
 //      初始化mSolidColors
         for (int i = 0; i < mSolidColors.length; i++) {
             mSolidColors[i] = color[0];
@@ -328,18 +295,14 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-//    public ButtonView setBackgroundDrawables(Drawable normal, Drawable pressed, Drawable selected) {
-//        mNormalBackgroundDrawable = normal;
-//        mPressedBackgroundDrawable = pressed;
-//        mSelectedBackgroundDrawable = selected;
-//        return this;
-//    }
-
     /**
      * @param backgroundDrawables 背景图，最多不能超过3个
      * @return
      */
     public ButtonView setBackgroundDrawables(Drawable... backgroundDrawables) {
+        if (backgroundDrawables.length > 3) {
+            throw new IllegalArgumentException("backgroundDrawables 最多不能超过3个");
+        }
         mBackgroundDrawables = backgroundDrawables;
         return this;
     }
@@ -348,25 +311,14 @@ public class ButtonView extends AppCompatButton {
         return setBackgroundDrawables(mResourcesHelper.getDrawables(drawableRes));
     }
 
-    /*public void commit() {
-        Drawable normal = mNormalBackgroundDrawable != null ? mNormalBackgroundDrawable :
-                getShape(mNormalStrokeColor, mNormalSolidColor);
-        Drawable pressed = mPressedBackgroundDrawable != null ? mPressedBackgroundDrawable :
-                getShape(mPressedStrokeColor, mPressedSolidColor);
-        Drawable selected = mSelectedBackgroundDrawable != null ? mSelectedBackgroundDrawable :
-                getShape(mSelectedStrokeColor, mSelectedSolidColor);
-        StateListDrawable selector = SelectorFactory.createDrawableSelector(normal, pressed, selected);
-        ViewCompat.setBackground(this, selector);
-    }*/
-
     public void commit() {
         if (mBackgroundDrawables != null) {
-            ViewCompat.setBackground(this,SelectorFactory.createDrawableSelector(mBackgroundDrawables));
+            ViewCompat.setBackground(this, SelectorFactory.createDrawableSelector(mBackgroundDrawables));
             return;
         }
         Drawable[] shapeDrawables = new Drawable[3];
         for (int i = 0; i < shapeDrawables.length; i++) {
-            shapeDrawables[i] = getShape(mStrokeColors[i],mSolidColors[i]);
+            shapeDrawables[i] = getShape(mStrokeColors[i], mSolidColors[i]);
         }
         StateListDrawable selector = SelectorFactory.createDrawableSelector(shapeDrawables);
         ViewCompat.setBackground(this, selector);

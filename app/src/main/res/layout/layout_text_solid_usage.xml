@@ -8,7 +8,7 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="solid and text"
+        android:text="Selector: solid and text"
         style="@style/TitleStyle" />
 
     <LinearLayout style="@style/LayoutStyle">
@@ -32,7 +32,7 @@
             android:onClick="onClick"
             app:shape="circleRect"
             app:cornerRadius="5dp"
-            app:solidColor="@color/colorRed"
+            app:solidColorEntries="@array/solidColors"
             app:textColorEntries="@array/textColors" />
 
     </LinearLayout>

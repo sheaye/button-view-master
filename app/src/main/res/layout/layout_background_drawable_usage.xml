@@ -8,22 +8,17 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="BackgroundDrawable"
+        android:text="Selector:BackgroundDrawable"
         style="@style/TitleStyle" />
 
     <LinearLayout style="@style/LayoutStyle">
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
+            android:padding="20dp"
             android:layout_margin="10dp"
             android:onClick="onClick"
             app:backgroundDrawableEntries="@array/drawables"/>
-
-        <com.sheaye.widget.ButtonView
-            style="@style/ButtonStyle"
-            android:layout_margin="10dp"
-            android:onClick="onClick"
-            android:background="@drawable/ic_selected"/>
 
     </LinearLayout>
 

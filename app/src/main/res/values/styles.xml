@@ -26,7 +26,7 @@
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingRight">20dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:text">文本</item>
+        <item name="android:text">TEXT</item>
     </style>
 
     <style name="TitleStyle">
@@ -35,7 +35,8 @@
         <item name="android:layout_margin">10dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:background">@drawable/background_bottom_line</item>
     </style>
 

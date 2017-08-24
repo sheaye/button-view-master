@@ -8,35 +8,19 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="stroke and text"
+        android:text="Selector: stroke and text"
         style="@style/TitleStyle" />
 
     <LinearLayout style="@style/LayoutStyle">
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:onClick="onClick"
-            app:shape="rectangle"
-            app:cornerRadius="5dp"
-            app:solidColorEntries="@array/solidColors"
-            app:textColorEntries="@array/textColors"
-            app:strokeColorEntries="@array/strokeColors"
-            app:strokeWidth="2dp"/>
-
-        <com.sheaye.widget.ButtonView
-            style="@style/ButtonStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
             android:onClick="onClick"
             app:shape="circleRect"
             app:cornerRadius="5dp"
             app:solidColorEntries="@array/solidColors"
             app:textColorEntries="@array/textColors"
-            app:strokeColor="@color/colorPrimary"
+            app:strokeColorEntries="@array/strokeColors"
             app:strokeWidth="2dp"/>
 
     </LinearLayout>

@@ -8,13 +8,13 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="shape"
+        android:text="Shape"
         style="@style/TitleStyle" />
 
     <LinearLayout style="@style/LayoutStyle">
 
         <TextView
-            android:text="矩形:"
+            android:text="Rectangle:"
             style="@style/LabelStyle" />
 
         <com.sheaye.widget.ButtonView
@@ -26,7 +26,7 @@
 
         <TextView
             style="@style/LabelStyle"
-            android:text="圆角矩形:" />
+            android:text="RoundRectangle:" />
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
@@ -41,7 +41,7 @@
 
         <TextView
             style="@style/LabelStyle"
-            android:text="圆矩形:" />
+            android:text="CircleRectangle:" />
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
@@ -53,10 +53,12 @@
 
         <TextView
             style="@style/LabelStyle"
-            android:text="圆形:" />
+            android:text="Circle:" />
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
+            android:padding="10dp"
+            android:layout_marginRight="10dp"
             app:shape="circle" />
 
     </LinearLayout>

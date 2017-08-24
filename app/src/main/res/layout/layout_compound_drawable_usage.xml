@@ -8,7 +8,7 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="CompoundDrawable"
+        android:text="Selector: CompoundDrawable"
         style="@style/TitleStyle" />
 
     <LinearLayout style="@style/LayoutStyle">

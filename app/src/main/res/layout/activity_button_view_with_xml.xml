@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     tools:context="com.sheaye.sample.ButtonViewWithXMLActivity">
 
@@ -14,13 +13,14 @@
 
         <include layout="@layout/layout_shape_usage" />
 
-        <include layout="@layout/layout_text_solid_colors_selector_usage" />
+        <include layout="@layout/layout_text_solid_usage" />
 
         <include layout="@layout/layout_stroke_usage" />
 
         <include layout="@layout/layout_background_drawable_usage"/>
 
         <include layout="@layout/layout_compound_drawable_usage"/>
+
     </LinearLayout>
 
 </ScrollView>

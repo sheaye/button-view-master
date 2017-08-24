@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
                 .setStrokeWidth(15)
                 .setTextColors(Color.BLUE, Color.DKGRAY, Color.GREEN)
                 .setSolidColor(Color.WHITE, Color.YELLOW, Color.RED)
-                .setCompoundIcons(R.drawable.ic_normal, R.drawable.ic_pressed, R.drawable.ic_selected, Gravity.RIGHT)
+                .setCompoundIcons(Gravity.RIGHT, R.drawable.ic_normal, R.drawable.ic_pressed, R.drawable.ic_selected)
                 .setCompoundPadding(30)
                 .commit();
     }

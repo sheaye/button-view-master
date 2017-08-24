@@ -60,17 +60,14 @@ public class ButtonView extends AppCompatButton {
     static final int SHAPE_RECTANGLE = 1;
     static final int SHAPE_CIRCLE = 2;
     static final int SHAPE_CIRCLE_RECT = 3;
-
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
-
     private int mRadius;
     private int[] mSolidColors = new int[3];
     private Drawable[] mBackgroundDrawables;
     private int mStrokeWidth;
     private int[] mStrokeColors = new int[3];
     private int mBackgroundShape;
-
     private ResourcesHelper mResourcesHelper;
     private Drawable[] mCompoundDrawables;
     private StateListDrawable mCompoundDrawable;
@@ -114,15 +111,13 @@ public class ButtonView extends AppCompatButton {
         mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
         mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NULL) {
-            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
-            setCompoundIcons(mResourcesHelper.getDrawable(resIdArray[0]),
-                    mResourcesHelper.getDrawable(resIdArray[1]),
-                    mResourcesHelper.getDrawable(resIdArray[2]), gravity);
+            @DrawableRes int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
+            setCompoundIcons(gravity,resIdArray);
             return;
         }
         Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
         if (compoundIcon != null) {
-            setCompoundIcons(compoundIcon, null, null, gravity);
+            setCompoundIcons(gravity,compoundIcon);
         }
     }
 
@@ -203,17 +198,14 @@ public class ButtonView extends AppCompatButton {
         }
     }
 
-    public ButtonView setCompoundIcons(@DrawableRes int normal, @DrawableRes int pressed, @DrawableRes int selected, int gravity) {
+    public ButtonView setCompoundIcons(int gravity, @DrawableRes int... drawableRes) {
         return setCompoundIcons(
-                mResourcesHelper.getDrawable(normal),
-                mResourcesHelper.getDrawable(pressed),
-                mResourcesHelper.getDrawable(selected),
-                gravity);
+                gravity,mResourcesHelper.getDrawables(drawableRes));
 
     }
 
-    public ButtonView setCompoundIcons(Drawable compoundIcon, Drawable compoundIconPressed, Drawable compoundIconSelected, int gravity) {
-        mCompoundDrawable = SelectorFactory.createDrawableSelector(compoundIcon, compoundIconPressed, compoundIconSelected);
+    public ButtonView setCompoundIcons(int gravity, Drawable... drawable) {
+        mCompoundDrawable = SelectorFactory.createDrawableSelector(drawable);
         mCompoundDrawables = new Drawable[4];
         switch (gravity) {
             case 1:// top

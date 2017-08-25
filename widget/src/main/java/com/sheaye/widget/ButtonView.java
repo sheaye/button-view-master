@@ -109,7 +109,7 @@ public class ButtonView extends AppCompatButton {
         mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
         mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
         if (compoundIconArrayId != NULL) {
-            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId, 3);
+            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId);
             setCompoundIcons(gravity, compoundPadding, resIdArray);
             return;
         }

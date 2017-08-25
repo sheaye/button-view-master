@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ArrayRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
@@ -33,6 +34,11 @@ public class ResourcesHelper {
         return ResourcesCompat.getColor(mResources, colorRes, null);
     }
 
+    public int[] getColorsFromArray(@ArrayRes int arrayId) {
+        int[] resIdArray = getResIdArray(arrayId);
+        return getColors(resIdArray);
+    }
+
     public int[] getColors(@NonNull int... colorRes) {
         int len = colorRes.length;
         int[] colors = new int[len];
@@ -49,7 +55,12 @@ public class ResourcesHelper {
         return ResourcesCompat.getDrawable(mResources, drawableRes, null);
     }
 
-    public Drawable[] getDrawables(@NonNull int... drawableRes){
+    public Drawable[] getDrawablesFromArray(@ArrayRes int arrayId) {
+        int[] resIdArray = getResIdArray(arrayId);
+        return getDrawables(resIdArray);
+    }
+
+    public Drawable[] getDrawables(@NonNull int... drawableRes) {
         int len = drawableRes.length;
         Drawable[] drawables = new Drawable[len];
         for (int i = 0; i < len; i++) {

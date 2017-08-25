@@ -36,5 +36,16 @@
         <item>circle</item>
     </array>
 
+    <string-array name="states">
+        <item>normal</item>
+        <item>normal and pressed</item>
+        <item>normal, pressed and selected</item>
+    </string-array>
+
+    <string-array name="cornerRadius">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
 
 </resources>

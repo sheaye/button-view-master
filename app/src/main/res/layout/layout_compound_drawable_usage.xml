@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,8 +8,8 @@
     tools:showIn="@layout/activity_button_view_with_xml">
 
     <TextView
-        android:text="Selector: CompoundDrawable"
-        style="@style/TitleStyle" />
+        style="@style/TitleStyle"
+        android:text="Selector: CompoundDrawable" />
 
     <LinearLayout style="@style/LayoutStyle">
 
@@ -17,33 +17,26 @@
             style="@style/ButtonStyle"
             android:layout_margin="10dp"
             android:onClick="onClick"
-            app:solidColor="@android:color/transparent"
-            app:textColorEntries="@array/textColorForCompound"
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="left"
-            app:compoundPadding="10dp"/>
+            app:compoundPadding="10dp"
+            app:solidColor="@android:color/transparent"
+            app:textColorEntries="@array/textColorForCompound" />
+
+        <com.sheaye.widget.ButtonView
+            style="@style/ButtonStyle"
+            app:shape="circleRect"
+            app:strokeColor="@android:color/transparent"/>
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
             android:layout_margin="10dp"
             android:onClick="onClick"
-            app:solidColor="@android:color/transparent"
-            app:textColorEntries="@array/textColorForCompound"
-            app:compoundIconEntries="@array/drawables"
-            app:compoundIconGravity="top"
-            app:compoundPadding="10dp"/>
-
-        <com.sheaye.widget.ButtonView
-            style="@style/ButtonStyle"
-            android:layout_margin="10dp"
-            android:onClick="onClick"
-            app:solidColor="@android:color/transparent"
-            app:textColorEntries="@array/textColorForCompound"
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="bottom"
-            app:compoundPadding="10dp"/>
+            app:compoundPadding="10dp"
+            app:textColorEntries="@array/textColorForCompound" />
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -18,7 +18,7 @@ public class ShapeDrawableFactory {
         int left = 0, top = 0;
         int right = canvas.getWidth();
         int bottom = canvas.getHeight();
-        if (strokeColor != NULL) {
+        if (strokeWidth != 0 && strokeColor != NULL) {
             paint.setColor(strokeColor);
             RectF outerRectF = new RectF(left, top, right, bottom);
             canvas.drawRoundRect(outerRectF, radius, radius, paint);
@@ -26,10 +26,12 @@ public class ShapeDrawableFactory {
             top += strokeWidth;
             right -= strokeWidth;
             bottom -= strokeWidth;
-            radius -= strokeWidth;
+            if (radius != 0) {
+                radius -= strokeWidth;
+            }
         }
         RectF innerRectF = new RectF(left, top, right, bottom);
-        if (solidColor != NULL) {
+        if (strokeWidth != 0 && solidColor != NULL) {
             paint.setColor(solidColor);
         }
         canvas.drawRoundRect(innerRectF, radius, radius, paint);
@@ -62,7 +64,7 @@ public class ShapeDrawableFactory {
                 float cx = getWidth() / 2;
                 float cy = getHeight() / 2;
                 float radius = Math.min(cx, cy);
-                if (strokeColor != NULL) {
+                if (strokeWidth != 0 && strokeColor != NULL) {
                     paint.setColor(strokeColor);
                     canvas.drawCircle(cx, cy, radius, paint);
                     radius -= strokeWidth;

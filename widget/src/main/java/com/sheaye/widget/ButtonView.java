@@ -100,7 +100,7 @@ public class ButtonView extends AppCompatButton {
     private void setBackgroundWithDrawables(TypedArray typedArray) {
         int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NULL);
         if (drawableArrayId != NULL) {
-            setBackground(mResourcesHelper.getDrawablesFromArray(drawableArrayId));
+            setBackgroundSelector(mResourcesHelper.getDrawablesFromArray(drawableArrayId));
         }
     }
 
@@ -108,7 +108,7 @@ public class ButtonView extends AppCompatButton {
      * @param backgroundDrawables 背景图，最多不能超过3个
      * @return
      */
-    public ButtonView setBackground(Drawable... backgroundDrawables) {
+    public ButtonView setBackgroundSelector(Drawable... backgroundDrawables) {
         if (backgroundDrawables.length > 3) {
             throw new IllegalArgumentException("backgroundDrawables 最多不能超过3个");
         }
@@ -117,20 +117,20 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setBackground(@DrawableRes int... drawableRes) {
-        return setBackground(mResourcesHelper.getDrawables(drawableRes));
+    public ButtonView setBackgroundSelector(@DrawableRes int... drawableRes) {
+        return setBackgroundSelector(mResourcesHelper.getDrawables(drawableRes));
     }
 
     private void setBackgroundWithShape(TypedArray typedArray) {
         int strokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 3);
         int radius = typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0);
-        setBackground(getShape(typedArray), radius, getSolidColors(typedArray), strokeWidth, getStrokeColors(typedArray));
+        setBackgroundSelector(getShape(typedArray), radius, getSolidColors(typedArray), strokeWidth, getStrokeColors(typedArray));
     }
 
-    public void setBackground(ButtonShape shape, int radius, int[] solidColors, int strokeWidth, int[] strokeColors) {
+    public void setBackgroundSelector(ButtonShape shape, int radius, int[] solidColors, int strokeWidth, int[] strokeColors) {
         mButtonShape = shape;
         solidColors = decorateColors(solidColors, Color.LTGRAY);
-        strokeColors = decorateColors(strokeColors, Color.TRANSPARENT);
+        strokeColors = decorateColors(strokeColors, NULL);
         ShapeDrawable[] drawables = new ShapeDrawable[solidColors.length];
         for (int i = 0; i < solidColors.length; i++) {
             switch (shape) {
@@ -147,6 +147,10 @@ public class ButtonView extends AppCompatButton {
         }
         mBackgroundDrawable = SelectorFactory.createDrawableSelector(drawables);
         ViewCompat.setBackground(this, mBackgroundDrawable);
+    }
+
+    public void setBackgroundSelector(ButtonShape shape, int radius, int[] solidColors) {
+        setBackgroundSelector(shape, radius, solidColors, 0, null);
     }
 
     private ButtonShape getShape(TypedArray typedArray) {
@@ -188,18 +192,18 @@ public class ButtonView extends AppCompatButton {
         return colors;
     }
 
-    private int[] decorateColors(int[] solidColors, int defaultColor) {
-        if (solidColors == null || solidColors.length == 0) {
+    private int[] decorateColors(int[] colors, int defaultColor) {
+        if (colors == null || colors.length == 0) {
             return new int[]{defaultColor, defaultColor, defaultColor};
         }
-        switch (solidColors.length) {
+        switch (colors.length) {
             case 1:
-                defaultColor = solidColors[0];
+                defaultColor = colors[0];
                 return new int[]{defaultColor, defaultColor, defaultColor};
             case 2:
-                return new int[]{solidColors[0], solidColors[1], solidColors[0]};
+                return new int[]{colors[0], colors[1], colors[0]};
             case 3:
-                return solidColors;
+                return colors;
             default:
                 throw new IllegalArgumentException("颜色值不能超过3个");
         }

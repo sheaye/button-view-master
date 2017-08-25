@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 
 import com.sheaye.util.ResourcesHelper;
@@ -98,36 +97,56 @@ public class ButtonView extends AppCompatButton {
         typedArray.recycle();
     }
 
-    private void setCompoundDrawables(TypedArray typedArray) {
-        int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
-        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
-        if (compoundIconArrayId == NULL && compoundIcon == null) {
-            return;
+    private void setBackgroundWithDrawables(TypedArray typedArray) {
+        int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NULL);
+        if (drawableArrayId != NULL) {
+            setBackground(mResourcesHelper.getDrawablesFromArray(drawableArrayId));
         }
-        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, Gravity.LEFT);
-        int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
-        mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
-        mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
-        if (compoundIconArrayId != NULL) {
-            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId);
-            setCompoundIcons(gravity, compoundPadding, resIdArray);
-            return;
-        }
-        setCompoundIcons(gravity, compoundPadding, compoundIcon);
     }
 
-
-    private void setTextColors(TypedArray typedArray) {
-        int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NULL);
-        if (textColorArrayId != NULL) {
-            setTextColors(mResourcesHelper.getColorsFromArray(textColorArrayId));
+    /**
+     * @param backgroundDrawables 背景图，最多不能超过3个
+     * @return
+     */
+    public ButtonView setBackground(Drawable... backgroundDrawables) {
+        if (backgroundDrawables.length > 3) {
+            throw new IllegalArgumentException("backgroundDrawables 最多不能超过3个");
         }
+        mBackgroundDrawable = SelectorFactory.createDrawableSelector(backgroundDrawables);
+        ViewCompat.setBackground(this, mBackgroundDrawable);
+        return this;
+    }
+
+    public ButtonView setBackground(@DrawableRes int... drawableRes) {
+        return setBackground(mResourcesHelper.getDrawables(drawableRes));
     }
 
     private void setBackgroundWithShape(TypedArray typedArray) {
         int strokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 3);
         int radius = typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0);
         setBackground(getShape(typedArray), radius, getSolidColors(typedArray), strokeWidth, getStrokeColors(typedArray));
+    }
+
+    public void setBackground(ButtonShape shape, int radius, int[] solidColors, int strokeWidth, int[] strokeColors) {
+        mButtonShape = shape;
+        solidColors = decorateColors(solidColors, Color.LTGRAY);
+        strokeColors = decorateColors(strokeColors, Color.TRANSPARENT);
+        ShapeDrawable[] drawables = new ShapeDrawable[solidColors.length];
+        for (int i = 0; i < solidColors.length; i++) {
+            switch (shape) {
+                case CIRCLE:
+                    drawables[i] = ShapeDrawableFactory.createCircle(solidColors[i], strokeWidth, strokeColors[i]);
+                    break;
+                case CIRCLE_RECT:
+                    drawables[i] = ShapeDrawableFactory.createCircleRect(solidColors[i], strokeWidth, strokeColors[i]);
+                    break;
+                default:
+                    drawables[i] = ShapeDrawableFactory.createRoundRect(radius, solidColors[i], strokeWidth, strokeColors[i]);
+                    break;
+            }
+        }
+        mBackgroundDrawable = SelectorFactory.createDrawableSelector(drawables);
+        ViewCompat.setBackground(this, mBackgroundDrawable);
     }
 
     private ButtonShape getShape(TypedArray typedArray) {
@@ -169,42 +188,51 @@ public class ButtonView extends AppCompatButton {
         return colors;
     }
 
-    private void setBackgroundWithDrawables(TypedArray typedArray) {
-        int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NULL);
-        if (drawableArrayId != NULL) {
-            setBackground(mResourcesHelper.getDrawablesFromArray(drawableArrayId));
+    private int[] decorateColors(int[] solidColors, int defaultColor) {
+        if (solidColors == null || solidColors.length == 0) {
+            return new int[]{defaultColor, defaultColor, defaultColor};
+        }
+        switch (solidColors.length) {
+            case 1:
+                defaultColor = solidColors[0];
+                return new int[]{defaultColor, defaultColor, defaultColor};
+            case 2:
+                return new int[]{solidColors[0], solidColors[1], solidColors[0]};
+            case 3:
+                return solidColors;
+            default:
+                throw new IllegalArgumentException("颜色值不能超过3个");
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mButtonShape == ButtonShape.CIRCLE) {
-            int diameter = Math.max(getMeasuredWidth(), getMeasuredHeight());
-            setMeasuredDimension(diameter, diameter);
-        }
-        if (mCompoundDrawable != null) {
-            if (mCompoundIconWidth == 0 || mCompoundIconHeight == 0) {
-                if (mCompoundOrientation == HORIZONTAL) {
-                    mCompoundIconHeight = getLineHeight();
-                    float scale = mCompoundIconHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
-                    mCompoundIconWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
-                } else {
-                    mCompoundIconWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-                    float scale = mCompoundIconWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
-                    mCompoundIconHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
-                }
-            }
-            mCompoundDrawable.setBounds(0, 0, mCompoundIconWidth, mCompoundIconHeight);
+    private void setTextColors(TypedArray typedArray) {
+        int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NULL);
+        if (textColorArrayId != NULL) {
+            setTextColors(mResourcesHelper.getColorsFromArray(textColorArrayId));
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mCompoundDrawables != null) {
-            setCompoundDrawables(mCompoundDrawables[0], mCompoundDrawables[1], mCompoundDrawables[2], mCompoundDrawables[3]);
+    public ButtonView setTextColors(@NonNull int... color) {
+        setTextColor(SelectorFactory.createColorSelector(color));
+        return this;
+    }
+
+    private void setCompoundDrawables(TypedArray typedArray) {
+        int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
+        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
+        if (compoundIconArrayId == NULL && compoundIcon == null) {
+            return;
         }
+        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, Gravity.LEFT);
+        int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
+        mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
+        mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
+        if (compoundIconArrayId != NULL) {
+            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId);
+            setCompoundIcons(gravity, compoundPadding, resIdArray);
+            return;
+        }
+        setCompoundIcons(gravity, compoundPadding, compoundIcon);
     }
 
     public ButtonView setCompoundIcons(int gravity, int padding, int... drawableRes) {
@@ -240,64 +268,34 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
-    public ButtonView setTextColors(@NonNull int... color) {
-        setTextColor(SelectorFactory.createColorSelector(color));
-        return this;
-    }
-
-    /**
-     * @param backgroundDrawables 背景图，最多不能超过3个
-     * @return
-     */
-    public ButtonView setBackground(Drawable... backgroundDrawables) {
-        if (backgroundDrawables.length > 3) {
-            throw new IllegalArgumentException("backgroundDrawables 最多不能超过3个");
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mButtonShape == ButtonShape.CIRCLE) {
+            int diameter = Math.max(getMeasuredWidth(), getMeasuredHeight());
+            setMeasuredDimension(diameter, diameter);
         }
-        mBackgroundDrawable = SelectorFactory.createDrawableSelector(backgroundDrawables);
-        ViewCompat.setBackground(this, mBackgroundDrawable);
-        return this;
-    }
-
-    public ButtonView setBackground(@DrawableRes int... drawableRes) {
-        return setBackground(mResourcesHelper.getDrawables(drawableRes));
-    }
-
-    public void setBackground(ButtonShape shape, int radius, int[] solidColors, int strokeWidth, int[] strokeColors) {
-        mButtonShape = shape;
-        solidColors = decorateColors(solidColors, Color.LTGRAY);
-        strokeColors = decorateColors(strokeColors, Color.TRANSPARENT);
-        ShapeDrawable[] drawables = new ShapeDrawable[solidColors.length];
-        for (int i = 0; i < solidColors.length; i++) {
-            switch (shape) {
-                case CIRCLE:
-                    drawables[i] = ShapeDrawableFactory.createCircle(solidColors[i], strokeWidth, strokeColors[i]);
-                    break;
-                case CIRCLE_RECT:
-                    drawables[i] = ShapeDrawableFactory.createCircleRect(solidColors[i], strokeWidth, strokeColors[i]);
-                    break;
-                default:
-                    drawables[i] = ShapeDrawableFactory.createRoundRect(radius, solidColors[i], strokeWidth, strokeColors[i]);
-                    break;
+        if (mCompoundDrawable != null) {
+            if (mCompoundIconWidth == 0 || mCompoundIconHeight == 0) {
+                if (mCompoundOrientation == HORIZONTAL) {
+                    mCompoundIconHeight = getLineHeight();
+                    float scale = mCompoundIconHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
+                    mCompoundIconWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
+                } else {
+                    mCompoundIconWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+                    float scale = mCompoundIconWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
+                    mCompoundIconHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
+                }
             }
+            mCompoundDrawable.setBounds(0, 0, mCompoundIconWidth, mCompoundIconHeight);
         }
-        mBackgroundDrawable = SelectorFactory.createDrawableSelector(drawables);
-        ViewCompat.setBackground(this, mBackgroundDrawable);
     }
 
-    private int[] decorateColors(int[] solidColors, int defaultColor) {
-        if (solidColors == null || solidColors.length == 0) {
-            return new int[]{defaultColor, defaultColor, defaultColor};
-        }
-        switch (solidColors.length) {
-            case 1:
-                defaultColor = solidColors[0];
-                return new int[]{defaultColor, defaultColor, defaultColor};
-            case 2:
-                return new int[]{solidColors[0], solidColors[1], solidColors[0]};
-            case 3:
-                return solidColors;
-            default:
-                throw new IllegalArgumentException("颜色值不能超过3个");
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mCompoundDrawables != null) {
+            setCompoundDrawables(mCompoundDrawables[0], mCompoundDrawables[1], mCompoundDrawables[2], mCompoundDrawables[3]);
         }
     }
 }

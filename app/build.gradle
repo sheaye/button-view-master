@@ -27,5 +27,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.shareye:button-view:1.0.0'
+//    compile 'com.shareye:button-view:1.0.0'
+    compile project(':widget')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:latest.release'
+    compile 'com.jakewharton:butterknife:latest.release'
 }

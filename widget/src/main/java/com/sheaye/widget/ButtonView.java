@@ -239,6 +239,7 @@ public class ButtonView extends AppCompatButton {
     }
 
     public ButtonView setShape(ButtonShape shape) {
+        ViewCompat.setBackground(this,null);
         mBackgroundShape = shape.getValue();
         return this;
     }

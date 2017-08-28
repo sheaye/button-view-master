@@ -34,6 +34,7 @@ public class ButtonViewWithCodeActivity extends AppCompatActivity {
                 .setSolidColors(mResourceHelper.getColorsFromArray(R.array.solidColors))
                 .setStrokeColors(mResourceHelper.getColorsFromArray(R.array.strokeColors))
                 .setStrokeWidth(5);
+
         mButtonWithShape
                 .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColors))
                 .setBackgroundSelector(selector);
@@ -45,6 +46,7 @@ public class ButtonViewWithCodeActivity extends AppCompatActivity {
         mButtonWithCompoundDrawable
                 .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColorForCompound))
                 .setCompoundIcons(Gravity.TOP,10,mResourceHelper.getDrawablesFromArray(R.array.drawables));
+
     }
 
     @OnClick({R.id.with_shape,R.id.with_drawables,R.id.with_compound_drawable})

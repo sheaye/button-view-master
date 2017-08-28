@@ -43,9 +43,14 @@ public class ButtonViewWithCodeActivity extends AppCompatActivity {
                 .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColors))
                 .setBackgroundSelector(mResourceHelper.getDrawablesFromArray(R.array.drawables));
 
+        ButtonView.CompoundSelector compoundSelector = new ButtonView.CompoundSelector(Gravity.TOP)
+                .setPadding(10)
+                .setDrawables(mResourceHelper.getDrawablesFromArray(R.array.drawables))
+                .setWidth(100)
+                .setHeight(100);
         mButtonWithCompoundDrawable
                 .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColorForCompound))
-                .setCompoundIcons(Gravity.TOP,10,mResourceHelper.getDrawablesFromArray(R.array.drawables));
+                .setCompoundSelector(compoundSelector);
 
     }
 

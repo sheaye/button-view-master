@@ -1,20 +1,16 @@
 package com.sheaye.widget;
 
 import android.content.Context;
-import android.content.pm.ProviderInfo;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
 
 import com.sheaye.util.ResourcesHelper;
@@ -68,9 +64,9 @@ public class ButtonView extends AppCompatButton {
     private ButtonShape mButtonShape;
     private ResourcesHelper mResourcesHelper;
     private Drawable[] mCompoundDrawables;
-    private StateListDrawable mCompoundDrawable;
-    private int mCompoundIconWidth;
-    private int mCompoundIconHeight;
+    private Drawable mCompoundDrawable;
+    private int mCompoundDrawableWidth;
+    private int mCompoundDrawableHeight;
     private int mCompoundOrientation;
     private Drawable mBackgroundDrawable;
 
@@ -137,13 +133,13 @@ public class ButtonView extends AppCompatButton {
     }
 
     public void setBackgroundSelector(ShapeSelector selector) {
-        mButtonShape = selector.getButtonShape();
-        int strokeWidth = selector.getStrokeWidth();
-        int[] strokeColors = selector.getStrokeColors();
-        int[] solidColors = selector.getSolidColors();
+        mButtonShape = selector.mButtonShape;
+        int strokeWidth = selector.mStrokeWidth;
+        int[] strokeColors = selector.mStrokeColors;
+        int[] solidColors = selector.mSolidColors;
         ShapeDrawable[] drawables = new ShapeDrawable[solidColors.length];
         for (int i = 0; i < solidColors.length; i++) {
-            switch (selector.getButtonShape()) {
+            switch (selector.mButtonShape) {
                 case CIRCLE:
                     drawables[i] = ShapeDrawableFactory.createCircle(solidColors[i], strokeWidth, strokeColors[i]);
                     break;
@@ -151,7 +147,7 @@ public class ButtonView extends AppCompatButton {
                     drawables[i] = ShapeDrawableFactory.createCircleRect(solidColors[i], strokeWidth, strokeColors[i]);
                     break;
                 default:
-                    drawables[i] = ShapeDrawableFactory.createRoundRect(selector.getRadius(), solidColors[i], strokeWidth, strokeColors[i]);
+                    drawables[i] = ShapeDrawableFactory.createRoundRect(selector.mRadius, solidColors[i], strokeWidth, strokeColors[i]);
                     break;
             }
         }
@@ -211,33 +207,36 @@ public class ButtonView extends AppCompatButton {
     }
 
     private void setCompoundDrawables(TypedArray typedArray) {
-        int compoundIconArrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
+        int arrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
         Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
-        if (compoundIconArrayId == NULL && compoundIcon == null) {
+        if (arrayId == NULL && compoundIcon == null) {
             return;
         }
         int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, Gravity.LEFT);
         int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
-        mCompoundIconWidth = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
-        mCompoundIconHeight = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
-        if (compoundIconArrayId != NULL) {
-            int[] resIdArray = mResourcesHelper.getResIdArray(compoundIconArrayId);
-            setCompoundIcons(gravity, compoundPadding, resIdArray);
+        int width = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
+        int height = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
+        CompoundSelector selector = new CompoundSelector(gravity)
+                .setPadding(compoundPadding)
+                .setWidth(width)
+                .setHeight(height);
+        if (arrayId != NULL) {
+            selector.setDrawables(mResourcesHelper.getDrawablesFromArray(arrayId));
+            setCompoundSelector(selector);
             return;
         }
-        setCompoundIcons(gravity, compoundPadding, compoundIcon);
+        selector.setDrawables(compoundIcon);
+        setCompoundSelector(selector);
     }
 
-    public ButtonView setCompoundIcons(int gravity, int paddingDp, int... drawableRes) {
-        return setCompoundIcons(gravity, paddingDp, mResourcesHelper.getDrawables(drawableRes));
-    }
-
-    public ButtonView setCompoundIcons(int gravity, int padding, Drawable... drawable) {
+    public ButtonView setCompoundSelector(CompoundSelector selector) {
         setBackgroundColor(Color.TRANSPARENT);
-        setCompoundDrawablePadding(padding);
-        mCompoundDrawable = SelectorFactory.createDrawableSelector(drawable);
+        setCompoundDrawablePadding(selector.mPadding);
+        mCompoundDrawable = selector.mDrawable;
+        mCompoundDrawableHeight = selector.mHeight;
+        mCompoundDrawableWidth = selector.mWidth;
         mCompoundDrawables = new Drawable[4];
-        switch (gravity) {
+        switch (selector.mGravity) {
             case 1:// top
             case Gravity.TOP:
                 mCompoundDrawables[1] = mCompoundDrawable;
@@ -270,18 +269,18 @@ public class ButtonView extends AppCompatButton {
             setMeasuredDimension(diameter, diameter);
         }
         if (mCompoundDrawable != null) {
-            if (mCompoundIconWidth == 0 || mCompoundIconHeight == 0) {
+            if (mCompoundDrawableWidth == 0 || mCompoundDrawableHeight == 0) {
                 if (mCompoundOrientation == HORIZONTAL) {
-                    mCompoundIconHeight = getLineHeight();
-                    float scale = mCompoundIconHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
-                    mCompoundIconWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
+                    mCompoundDrawableHeight = getLineHeight();
+                    float scale = mCompoundDrawableHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
+                    mCompoundDrawableWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
                 } else {
-                    mCompoundIconWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-                    float scale = mCompoundIconWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
-                    mCompoundIconHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
+                    mCompoundDrawableWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+                    float scale = mCompoundDrawableWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
+                    mCompoundDrawableHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
                 }
             }
-            mCompoundDrawable.setBounds(0, 0, mCompoundIconWidth, mCompoundIconHeight);
+            mCompoundDrawable.setBounds(0, 0, mCompoundDrawableWidth, mCompoundDrawableHeight);
         }
     }
 
@@ -304,30 +303,14 @@ public class ButtonView extends AppCompatButton {
             mButtonShape = buttonShape;
         }
 
-        public ButtonShape getButtonShape() {
-            return mButtonShape;
-        }
-
-        public int getRadius() {
-            return mRadius;
-        }
-
         public ShapeSelector setRadius(int radius) {
             mRadius = radius;
             return this;
         }
 
-        public int[] getSolidColors() {
-            return decorateColors(mSolidColors, Color.LTGRAY);
-        }
-
         public ShapeSelector setSolidColors(int[] solidColors) {
-            mSolidColors = solidColors;
+            mSolidColors = decorateColors(solidColors, Color.LTGRAY);
             return this;
-        }
-
-        public int getStrokeWidth() {
-            return mStrokeWidth;
         }
 
         public ShapeSelector setStrokeWidth(int strokeWidth) {
@@ -335,12 +318,9 @@ public class ButtonView extends AppCompatButton {
             return this;
         }
 
-        public int[] getStrokeColors() {
-            return decorateColors(mStrokeColors, Color.WHITE);
-        }
-
         public ShapeSelector setStrokeColors(int[] strokeColors) {
-            mStrokeColors = strokeColors;
+            mStrokeColors = decorateColors(strokeColors, Color.WHITE);
+            ;
             return this;
         }
 
@@ -359,6 +339,38 @@ public class ButtonView extends AppCompatButton {
                 default:
                     throw new IllegalArgumentException("颜色值不能超过3个");
             }
+        }
+    }
+
+    public static class CompoundSelector {
+        private int mGravity;
+        private int mPadding;
+        private Drawable mDrawable;
+        private int mWidth;
+        private int mHeight;
+
+        public CompoundSelector(int gravity) {
+            mGravity = gravity;
+        }
+
+        public CompoundSelector setDrawables(Drawable... drawables) {
+            mDrawable = SelectorFactory.createDrawableSelector(drawables);
+            return this;
+        }
+
+        public CompoundSelector setPadding(int padding) {
+            mPadding = padding;
+            return this;
+        }
+
+        public CompoundSelector setWidth(int width) {
+            mWidth = width;
+            return this;
+        }
+
+        public CompoundSelector setHeight(int height) {
+            mHeight = height;
+            return this;
         }
     }
 

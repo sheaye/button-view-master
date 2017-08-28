@@ -25,11 +25,6 @@
 
         <com.sheaye.widget.ButtonView
             style="@style/ButtonStyle"
-            app:shape="circleRect"
-            app:strokeColor="@android:color/transparent"/>
-
-        <com.sheaye.widget.ButtonView
-            style="@style/ButtonStyle"
             android:layout_margin="10dp"
             android:onClick="onClick"
             app:compoundIconEntries="@array/drawables"

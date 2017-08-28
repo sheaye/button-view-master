@@ -31,9 +31,7 @@ public class ShapeDrawableFactory {
             }
         }
         RectF innerRectF = new RectF(left, top, right, bottom);
-        if (strokeWidth != 0 && solidColor != NULL) {
-            paint.setColor(solidColor);
-        }
+        paint.setColor(solidColor);
         canvas.drawRoundRect(innerRectF, radius, radius, paint);
     }
 

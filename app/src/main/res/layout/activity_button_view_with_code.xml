@@ -5,105 +5,35 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:context="com.sheaye.sample.ButtonViewWithCodeActivity">
 
     <com.sheaye.widget.ButtonView
-        android:id="@+id/button_view"
+        android:id="@+id/with_shape"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_margin="20dp"
-        android:text="TEXT"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onClick"/>
+        android:text="withShape"
+        android:textAllCaps="false"
+        android:padding="10dp"
+        android:layout_margin="10dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.sheaye.widget.ButtonView
+        android:id="@+id/with_drawables"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorLightGray"
-        android:padding="1dp">
+        android:text="withShape"
+        android:textAllCaps="false"
+        android:padding="10dp"
+        android:layout_margin="10dp"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
-            android:padding="10dp"
-            android:background="@color/colorWhite"
-            android:text="Shape"
-            android:gravity="left"/>
-
-        <Spinner
-            android:id="@+id/shape_spinner"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:entries="@array/shapes"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/corner_radius_layout"
-        android:layout_width="match_parent"
+    <com.sheaye.widget.ButtonView
+        android:id="@+id/with_compound_drawable"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorLightGray"
-        android:layout_marginTop="1dp"
-        android:padding="1dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
-            android:padding="10dp"
-            android:background="@color/colorWhite"
-            android:text="cornerRadius"
-            android:gravity="left"/>
-
-        <Spinner
-            android:id="@+id/corner_radius"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:entries="@array/states"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorLightGray"
-        android:layout_marginTop="1dp"
-        android:padding="1dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
-            android:padding="10dp"
-            android:background="@color/colorWhite"
-            android:text="SolidColor"
-            android:gravity="left"/>
-
-        <Spinner
-            android:id="@+id/solid_color_spinner"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:entries="@array/states"/>
-
-    </LinearLayout>
+        android:text="withShape"
+        android:textAllCaps="false"
+        android:padding="10dp"
+        android:layout_margin="10dp"/>
 
 
 </LinearLayout>

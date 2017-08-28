@@ -26,7 +26,7 @@ public class ShapeDrawableFactory {
             top += strokeWidth;
             right -= strokeWidth;
             bottom -= strokeWidth;
-            if (radius != 0) {
+            if (radius > 0) {
                 radius -= strokeWidth;
             }
         }
@@ -35,6 +35,9 @@ public class ShapeDrawableFactory {
         canvas.drawRoundRect(innerRectF, radius, radius, paint);
     }
 
+    /**
+     * @return 圆矩形的shape
+     */
     public static ShapeDrawable createCircleRect(final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override
@@ -45,6 +48,10 @@ public class ShapeDrawableFactory {
         return new ShapeDrawable(shape);
     }
 
+    /**
+     * @return 矩形的shape
+     * @param radius 值为0时，返回直角矩形，大于0时返回圆角矩形
+     */
     public static ShapeDrawable createRoundRect(final int radius, final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override
@@ -55,6 +62,9 @@ public class ShapeDrawableFactory {
         return new ShapeDrawable(shape);
     }
 
+    /**
+     * @return 圆形的shape
+     */
     public static ShapeDrawable createCircle(final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {
             @Override

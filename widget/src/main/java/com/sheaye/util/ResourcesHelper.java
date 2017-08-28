@@ -24,6 +24,10 @@ public class ResourcesHelper {
         mResources = context.getResources();
     }
 
+    /**
+     * @param colorRes color的资源id
+     * @return 颜色值
+     */
     public int getColor(int colorRes) {
         if (colorRes == NULL) {
             return NULL;
@@ -31,11 +35,19 @@ public class ResourcesHelper {
         return ResourcesCompat.getColor(mResources, colorRes, null);
     }
 
+    /**
+     * @param arrayId color资源id的array的resId
+     * @return 颜色值数组
+     */
     public int[] getColorsFromArray(@ArrayRes int arrayId) {
         int[] resIdArray = getResIdArray(arrayId);
         return getColors(resIdArray);
     }
 
+    /**
+     * @param colorRes color的资源id
+     * @return color值的数组
+     */
     public int[] getColors(@NonNull int... colorRes) {
         int len = colorRes.length;
         int[] colors = new int[len];
@@ -45,6 +57,10 @@ public class ResourcesHelper {
         return colors;
     }
 
+    /**
+     * @param drawableRes drawable的资源id
+     * @return drawable
+     */
     public Drawable getDrawable(int drawableRes) {
         if (drawableRes == NULL) {
             return null;
@@ -52,11 +68,19 @@ public class ResourcesHelper {
         return ResourcesCompat.getDrawable(mResources, drawableRes, null);
     }
 
+    /**
+     * @param arrayId drawable资源id的array的resId
+     * @return drawable数组
+     */
     public Drawable[] getDrawablesFromArray(@ArrayRes int arrayId) {
         int[] resIdArray = getResIdArray(arrayId);
         return getDrawables(resIdArray);
     }
 
+    /**
+     * @param drawableRes drawable的资源id
+     * @return drawable数组
+     */
     public Drawable[] getDrawables(@NonNull int... drawableRes) {
         int len = drawableRes.length;
         Drawable[] drawables = new Drawable[len];
@@ -66,6 +90,10 @@ public class ResourcesHelper {
         return drawables;
     }
 
+    /**
+     * @param arrayId 资源id组成的array的resId
+     * @return 资源id的数组
+     */
     public int[] getResIdArray(@ArrayRes int arrayId) {
         if (arrayId == NULL) {
             return null;

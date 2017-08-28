@@ -105,8 +105,7 @@ public class ButtonView extends AppCompatButton {
     }
 
     /**
-     * @param backgroundDrawables 背景图，最多不能超过3个
-     * @return
+     * @param backgroundDrawables 背景图，最多不能超过3个,依次为state_normal,state_pressed,state_selected
      */
     public ButtonView setBackgroundSelector(Drawable... backgroundDrawables) {
         if (backgroundDrawables.length > 3) {
@@ -117,6 +116,10 @@ public class ButtonView extends AppCompatButton {
         return this;
     }
 
+    /**
+     *
+     * @param drawableRes 背景图的资源id，最多不能超过3个,依次为state_normal,state_pressed,state_selected
+     */
     public ButtonView setBackgroundSelector(@DrawableRes int... drawableRes) {
         return setBackgroundSelector(mResourcesHelper.getDrawables(drawableRes));
     }
@@ -132,6 +135,9 @@ public class ButtonView extends AppCompatButton {
         setBackgroundSelector(selector);
     }
 
+    /**
+     * @param selector 基于Shape的Selector
+     */
     public void setBackgroundSelector(ShapeSelector selector) {
         mButtonShape = selector.mButtonShape;
         int strokeWidth = selector.mStrokeWidth;
@@ -201,6 +207,10 @@ public class ButtonView extends AppCompatButton {
         }
     }
 
+    /**
+     * 设置字体颜色的Selector
+     * @param color 颜色集，最多3个元素，依次为state_normal,state_pressed,state_selected
+     */
     public ButtonView setTextColors(@NonNull int... color) {
         setTextColor(SelectorFactory.createColorSelector(color));
         return this;
@@ -229,6 +239,10 @@ public class ButtonView extends AppCompatButton {
         setCompoundSelector(selector);
     }
 
+    /**
+     * 设置附属的drawable
+     * @param selector 通过CompoundSelector可以设置drawableLeft,drawableTop,drawableRight或drawableBottom
+     */
     public ButtonView setCompoundSelector(CompoundSelector selector) {
         setBackgroundColor(Color.TRANSPARENT);
         setCompoundDrawablePadding(selector.mPadding);
@@ -303,21 +317,34 @@ public class ButtonView extends AppCompatButton {
             mButtonShape = buttonShape;
         }
 
+        /**
+         * ButtonShape为Rectangle时，表示其圆角，其他形状时，设置此项无效
+         * @param radius 圆角值，单位Px
+         */
         public ShapeSelector setRadius(int radius) {
             mRadius = radius;
             return this;
         }
 
+        /**
+         * @param solidColors solid部分的颜色集，最多3个元素，依次为state_normal,state_pressed,state_selected
+         */
         public ShapeSelector setSolidColors(int[] solidColors) {
             mSolidColors = decorateColors(solidColors, Color.LTGRAY);
             return this;
         }
 
+        /**
+         * @param strokeWidth stroke的宽度值，设置此值后Shape外围会有一个stroke边
+         */
         public ShapeSelector setStrokeWidth(int strokeWidth) {
             mStrokeWidth = strokeWidth;
             return this;
         }
 
+        /**
+         * @param strokeColors stroke的颜色集，最多三个元素，依次为state_normal,state_pressed,state_selected
+         */
         public ShapeSelector setStrokeColors(int[] strokeColors) {
             mStrokeColors = decorateColors(strokeColors, Color.WHITE);
             ;
@@ -349,25 +376,44 @@ public class ButtonView extends AppCompatButton {
         private int mWidth;
         private int mHeight;
 
+        /**
+         * @param gravity compoundDrawable的位置，Gravity.LEFT,Gravity.TOP,Gravity.RIGHT 或Gravity.BOTTOM
+         */
         public CompoundSelector(int gravity) {
             mGravity = gravity;
         }
 
+        /**
+         * @param drawables compoundDrawable集，最多3个元素，依次为state_normal,state_pressed,state_selected
+         */
         public CompoundSelector setDrawables(Drawable... drawables) {
             mDrawable = SelectorFactory.createDrawableSelector(drawables);
             return this;
         }
 
+        /**
+         * 设置图文间距
+         * @param padding 图文间距，单位px
+         */
         public CompoundSelector setPadding(int padding) {
             mPadding = padding;
             return this;
         }
 
+        /**
+         * 设置compoundDrawable的宽度；默认为0，gravity为top或bottom时与文本等宽,否则根据要显示的高度缩放而来；
+         * @param width compoundDrawable的显示宽度，单位px
+         */
         public CompoundSelector setWidth(int width) {
             mWidth = width;
             return this;
         }
 
+        /**
+         * 设置compoundDrawable的高度；默认为0，gravity为left或right时，与文本等高，否则根据要显示的宽度缩放而来
+         * @param height compoundDrawable的显示高度，单位px
+         * @return
+         */
         public CompoundSelector setHeight(int height) {
             mHeight = height;
             return this;

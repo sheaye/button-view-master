@@ -31,8 +31,9 @@ public class ButtonViewWithCodeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         ButtonView.ShapeSelector selector = new ButtonView.ShapeSelector(ButtonShape.CIRCLE_RECT)
-                .setSolidColors(mResourceHelper.getColorsFromArray(R.array.solidColors));
-
+                .setSolidColors(mResourceHelper.getColorsFromArray(R.array.solidColors))
+                .setStrokeColors(mResourceHelper.getColorsFromArray(R.array.strokeColors))
+                .setStrokeWidth(5);
         mButtonWithShape
                 .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColors))
                 .setBackgroundSelector(selector);

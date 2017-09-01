@@ -166,8 +166,6 @@ public class ButtonView extends AppCompatTextView {
                 return ButtonShape.CIRCLE_RECT;
             case SHAPE_CIRCLE:
                 return ButtonShape.CIRCLE;
-            /*case SHAPE_RECTANGLE:
-                return ButtonShape.RECTANGLE;*/
             default:
                 return ButtonShape.RECTANGLE;
         }

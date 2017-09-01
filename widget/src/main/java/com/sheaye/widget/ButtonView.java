@@ -9,6 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -54,7 +55,7 @@ import static com.sheaye.util.Const.NULL;
  */
 
 
-public class ButtonView extends AppCompatTextView {
+public class ButtonView extends AppCompatButton {
 
     static final int SHAPE_RECTANGLE = 1;
     static final int SHAPE_CIRCLE = 2;

@@ -1,6 +1,7 @@
 package com.sheaye.util;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
@@ -19,8 +20,12 @@ public class ShapeDrawableFactory {
         int right = canvas.getWidth();
         int bottom = canvas.getHeight();
         if (strokeWidth != 0 && strokeColor != NULL) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(strokeWidth);
             paint.setColor(strokeColor);
-            RectF outerRectF = new RectF(left, top, right, bottom);
+            int d = strokeWidth / 2;
+//          注意stroke绘制线框是基于给定尺寸，向内外扩张strokeWidth/2而来
+            RectF outerRectF = new RectF(left + d, top + d, right - d, bottom - d);
             canvas.drawRoundRect(outerRectF, radius, radius, paint);
             left += strokeWidth;
             top += strokeWidth;
@@ -31,6 +36,7 @@ public class ShapeDrawableFactory {
             }
         }
         RectF innerRectF = new RectF(left, top, right, bottom);
+        paint.setStyle(Paint.Style.FILL);
         paint.setColor(solidColor);
         canvas.drawRoundRect(innerRectF, radius, radius, paint);
     }
@@ -49,8 +55,8 @@ public class ShapeDrawableFactory {
     }
 
     /**
-     * @return 矩形的shape
      * @param radius 值为0时，返回直角矩形，大于0时返回圆角矩形
+     * @return 矩形的shape
      */
     public static ShapeDrawable createRoundRect(final int radius, final int solidColor, final int strokeWidth, final int strokeColor) {
         Shape shape = new Shape() {

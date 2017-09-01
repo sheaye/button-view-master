@@ -21,7 +21,6 @@
             app:compoundIconGravity="left"
             app:compoundPadding="10dp"
             app:shape="rectangle"
-            app:solidColor="@android:color/transparent"
             app:textColorEntries="@array/textColorForCompound" />
 
         <com.sheaye.widget.ButtonView
@@ -31,6 +30,8 @@
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="bottom"
             app:compoundPadding="10dp"
+            app:solidColor="@android:color/transparent"
+            app:strokeColor="@color/colorAccent"
             app:textColorEntries="@array/textColorForCompound" />
 
     </LinearLayout>

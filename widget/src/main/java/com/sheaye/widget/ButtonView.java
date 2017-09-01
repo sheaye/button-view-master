@@ -9,7 +9,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 
@@ -54,7 +54,7 @@ import static com.sheaye.util.Const.NULL;
  */
 
 
-public class ButtonView extends AppCompatButton {
+public class ButtonView extends AppCompatTextView {
 
     static final int SHAPE_RECTANGLE = 1;
     static final int SHAPE_CIRCLE = 2;
@@ -80,14 +80,12 @@ public class ButtonView extends AppCompatButton {
 
     public ButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setGravity(Gravity.CENTER_VERTICAL);
         setClickable(true);
         setMinHeight(0);
         mBackgroundDrawable = getBackground();
         mResourcesHelper = new ResourcesHelper(context);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
         if (mBackgroundDrawable == null) {
-            ViewCompat.setBackground(this,null);
             setBackgroundWithDrawables(typedArray);
         }
         if (mBackgroundDrawable == null) {
@@ -125,13 +123,9 @@ public class ButtonView extends AppCompatButton {
     }
 
     private void setBackgroundWithShape(TypedArray typedArray) {
-        ButtonShape shape = getShape(typedArray);
-        if (shape == null) {
-            return;
-        }
         int strokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 3);
         int radius = typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0);
-        ShapeSelector selector = new ShapeSelector(shape)
+        ShapeSelector selector = new ShapeSelector(getShape(typedArray))
                 .setRadius(radius)
                 .setSolidColors(getSolidColors(typedArray))
                 .setStrokeWidth(strokeWidth)
@@ -172,10 +166,10 @@ public class ButtonView extends AppCompatButton {
                 return ButtonShape.CIRCLE_RECT;
             case SHAPE_CIRCLE:
                 return ButtonShape.CIRCLE;
-            case SHAPE_RECTANGLE:
-                return ButtonShape.RECTANGLE;
+            /*case SHAPE_RECTANGLE:
+                return ButtonShape.RECTANGLE;*/
             default:
-                return null;
+                return ButtonShape.RECTANGLE;
         }
 
     }

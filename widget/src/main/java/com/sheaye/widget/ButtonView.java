@@ -80,13 +80,14 @@ public class ButtonView extends AppCompatButton {
 
     public ButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setGravity(Gravity.CENTER);
+        setGravity(Gravity.CENTER_VERTICAL);
         setClickable(true);
         setMinHeight(0);
         mBackgroundDrawable = getBackground();
         mResourcesHelper = new ResourcesHelper(context);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
         if (mBackgroundDrawable == null) {
+            ViewCompat.setBackground(this,null);
             setBackgroundWithDrawables(typedArray);
         }
         if (mBackgroundDrawable == null) {
@@ -117,7 +118,6 @@ public class ButtonView extends AppCompatButton {
     }
 
     /**
-     *
      * @param drawableRes 背景图的资源id，最多不能超过3个,依次为state_normal,state_pressed,state_selected
      */
     public ButtonView setBackgroundSelector(@DrawableRes int... drawableRes) {
@@ -125,9 +125,13 @@ public class ButtonView extends AppCompatButton {
     }
 
     private void setBackgroundWithShape(TypedArray typedArray) {
+        ButtonShape shape = getShape(typedArray);
+        if (shape == null) {
+            return;
+        }
         int strokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 3);
         int radius = typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0);
-        ShapeSelector selector = new ShapeSelector(getShape(typedArray))
+        ShapeSelector selector = new ShapeSelector(shape)
                 .setRadius(radius)
                 .setSolidColors(getSolidColors(typedArray))
                 .setStrokeWidth(strokeWidth)
@@ -162,14 +166,16 @@ public class ButtonView extends AppCompatButton {
     }
 
     private ButtonShape getShape(TypedArray typedArray) {
-        int shapeValue = typedArray.getInt(R.styleable.ButtonView_shape, SHAPE_RECTANGLE);
+        int shapeValue = typedArray.getInt(R.styleable.ButtonView_shape, NULL);
         switch (shapeValue) {
             case SHAPE_CIRCLE_RECT:
                 return ButtonShape.CIRCLE_RECT;
             case SHAPE_CIRCLE:
                 return ButtonShape.CIRCLE;
-            default:
+            case SHAPE_RECTANGLE:
                 return ButtonShape.RECTANGLE;
+            default:
+                return null;
         }
 
     }
@@ -222,7 +228,7 @@ public class ButtonView extends AppCompatButton {
         if (arrayId == NULL && compoundIcon == null) {
             return;
         }
-        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, Gravity.LEFT);
+        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 0);
         int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
         int width = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
         int height = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
@@ -244,7 +250,6 @@ public class ButtonView extends AppCompatButton {
      * @param selector 通过CompoundSelector可以设置drawableLeft,drawableTop,drawableRight或drawableBottom
      */
     public ButtonView setCompoundSelector(CompoundSelector selector) {
-        setBackgroundColor(Color.TRANSPARENT);
         setCompoundDrawablePadding(selector.mPadding);
         mCompoundDrawable = selector.mDrawable;
         mCompoundDrawableHeight = selector.mHeight;
@@ -330,7 +335,7 @@ public class ButtonView extends AppCompatButton {
          * @param solidColors solid部分的颜色集，最多3个元素，依次为state_normal,state_pressed,state_selected
          */
         public ShapeSelector setSolidColors(int[] solidColors) {
-            mSolidColors = decorateColors(solidColors, Color.LTGRAY);
+            mSolidColors = decorateColors(solidColors, Color.TRANSPARENT);
             return this;
         }
 
@@ -346,8 +351,7 @@ public class ButtonView extends AppCompatButton {
          * @param strokeColors stroke的颜色集，最多三个元素，依次为state_normal,state_pressed,state_selected
          */
         public ShapeSelector setStrokeColors(int[] strokeColors) {
-            mStrokeColors = decorateColors(strokeColors, Color.WHITE);
-            ;
+            mStrokeColors = decorateColors(strokeColors, NULL);
             return this;
         }
 
@@ -412,7 +416,6 @@ public class ButtonView extends AppCompatButton {
         /**
          * 设置compoundDrawable的高度；默认为0，gravity为left或right时，与文本等高，否则根据要显示的宽度缩放而来
          * @param height compoundDrawable的显示高度，单位px
-         * @return
          */
         public CompoundSelector setHeight(int height) {
             mHeight = height;

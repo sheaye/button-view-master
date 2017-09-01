@@ -20,6 +20,7 @@
             app:compoundIconEntries="@array/drawables"
             app:compoundIconGravity="left"
             app:compoundPadding="10dp"
+            app:shape="rectangle"
             app:solidColor="@android:color/transparent"
             app:textColorEntries="@array/textColorForCompound" />
 

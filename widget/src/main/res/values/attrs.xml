@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="ButtonView">
         <attr name="shape" format="enum">
             <enum name="rectangle" value="1" />
@@ -19,11 +20,11 @@
 
         <attr name="textColorEntries" format="reference" />
 
-        <attr name="compoundIcon" format="reference" />
-        <attr name="compoundIconWidth" format="reference|dimension"/>
-        <attr name="compoundIconHeight" format="reference|dimension"/>
-        <attr name="compoundIconEntries" format="reference" />
-        <attr name="compoundIconGravity" format="enum">
+        <attr name="compoundDrawable" format="reference" />
+        <attr name="compoundDrawableWidth" format="reference|dimension"/>
+        <attr name="compoundDrawableHeight" format="reference|dimension"/>
+        <attr name="compoundDrawableEntries" format="reference" />
+        <attr name="compoundDrawableGravity" format="enum">
             <enum name="left" value="0" />
             <enum name="top" value="1" />
             <enum name="right" value="2" />
@@ -31,4 +32,5 @@
         </attr>
         <attr name="compoundPadding" format="dimension|reference"/>
     </declare-styleable>
+
 </resources>

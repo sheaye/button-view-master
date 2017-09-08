@@ -1,12 +1,12 @@
 package com.sheaye.sample;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
 
 import com.sheaye.util.ResourcesHelper;
-import com.sheaye.widget.ButtonShape;
+import com.sheaye.util.SelectorFactory;
 import com.sheaye.widget.ButtonView;
 
 import butterknife.BindView;
@@ -30,31 +30,32 @@ public class ButtonViewWithCodeActivity extends AppCompatActivity {
         mResourceHelper = new ResourcesHelper(this);
         ButterKnife.bind(this);
 
-        ButtonView.ShapeSelector selector = new ButtonView.ShapeSelector(ButtonShape.CIRCLE_RECT)
-                .setSolidColors(mResourceHelper.getColorsFromArray(R.array.solidColors))
-                .setStrokeColors(mResourceHelper.getColorsFromArray(R.array.strokeColors))
-                .setStrokeWidth(5);
+        /*ButtonView.ShapeSelector selector = new ButtonView.ShapeSelector(ButtonShape.CIRCLE_RECT)
+                .setSolidColors(mResourceHelper.getColorArray(R.array.solidColors))
+                .setStrokeColors(mResourceHelper.getColorArray(R.array.strokeColors))
+                .setStrokeWidth(5);*/
+
+        /*mButtonWithShape
+                .setTextColors(mResourceHelper.getColorArray(R.array.textColors))
+                .setBackgroundSelector(selector);*/
 
         mButtonWithShape
-                .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColors))
-                .setBackgroundSelector(selector);
+                .setStrokeColor(mResourceHelper.getColorArray(R.array.strokeColors))
+                .setStrokeWidth(5)
+                .setBackgroundShape(ButtonView.BackgroundShape.CIRCLE_RECT, mResourceHelper.getColorArray(R.array.solidColors));
 
-        mButtonWithDrawables
-                .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColors))
-                .setBackgroundSelector(mResourceHelper.getDrawablesFromArray(R.array.drawables));
+        mButtonWithDrawables.setTextColor(SelectorFactory.createColorSelector(mResourceHelper.getColorArray(R.array.textColors)));
+        ViewCompat.setBackground(mButtonWithDrawables,
+                SelectorFactory.createDrawableSelector(mResourceHelper.getDrawableArray(R.array.drawables)));
 
-        ButtonView.CompoundSelector compoundSelector = new ButtonView.CompoundSelector(Gravity.TOP)
-                .setPadding(10)
-                .setDrawables(mResourceHelper.getDrawablesFromArray(R.array.drawables))
-                .setWidth(100)
-                .setHeight(100);
-        mButtonWithCompoundDrawable
-                .setTextColors(mResourceHelper.getColorsFromArray(R.array.textColorForCompound))
-                .setCompoundSelector(compoundSelector);
+        mButtonWithCompoundDrawable.setCompoundDrawable(
+                SelectorFactory.createDrawableSelector(
+                        mResourceHelper.getDrawableArray(R.array.drawables)));
+
 
     }
 
-    @OnClick({R.id.with_shape,R.id.with_drawables,R.id.with_compound_drawable})
+    @OnClick({R.id.with_shape, R.id.with_drawables, R.id.with_compound_drawable})
     public void onClick(View view) {
         view.setSelected(!view.isSelected());
     }

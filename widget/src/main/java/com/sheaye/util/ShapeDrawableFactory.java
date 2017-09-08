@@ -1,13 +1,10 @@
 package com.sheaye.util;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
-
-import static com.sheaye.util.Const.NULL;
 
 /**
  * Created by yexinyan on 2017/8/20.
@@ -19,7 +16,7 @@ public class ShapeDrawableFactory {
         int left = 0, top = 0;
         int right = canvas.getWidth();
         int bottom = canvas.getHeight();
-        if (strokeWidth != 0 && strokeColor != NULL) {
+        if (strokeWidth != 0 && strokeColor != 0) {
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(strokeWidth);
             paint.setColor(strokeColor);
@@ -78,7 +75,7 @@ public class ShapeDrawableFactory {
                 float cx = getWidth() / 2;
                 float cy = getHeight() / 2;
                 float radius = Math.min(cx, cy);
-                if (strokeWidth != 0 && strokeColor != NULL) {
+                if (strokeWidth != 0 && strokeColor != 0) {
                     paint.setColor(strokeColor);
                     canvas.drawCircle(cx, cy, radius, paint);
                     radius -= strokeWidth;

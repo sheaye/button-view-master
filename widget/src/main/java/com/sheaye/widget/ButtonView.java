@@ -2,15 +2,11 @@ package com.sheaye.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatTextView;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.Gravity;
 
@@ -18,58 +14,21 @@ import com.sheaye.util.ResourcesHelper;
 import com.sheaye.util.SelectorFactory;
 import com.sheaye.util.ShapeDrawableFactory;
 
-import static com.sheaye.util.Const.NULL;
-
 /**
- * Created by yexinyan on 2017/8/20.
- * <p>
- * 名词定义：“点击顺序”：数组中从左到右依次为state_normal,state_pressed,state_selected
- * <p>
- * R.styleable.ButtonView_cornerRadius 设置圆角半径，仅当shape为rectangle时有效
- * <p>
- * R.styleable.ButtonView_solidColor 填充部分的背景色，单色，不随state变化，默认为白色
- * <p>
- * R.styleable.ButtonView_solidColorEntries 填充部分的背景色集合，随state变化，最多3个,默认全为白色,遵循“点击顺序”
- * <p>
- * R.styleable.ButtonView_strokeColor 外围线框颜色，有了颜色才会出现外框，此为单色，不随state变化
- * <p>
- * R.styleable.ButtonView_strokeColorEntries 外围线框颜色集合，有了颜色才会出现外框，随state变化，遵循“点击顺序”
- * <p>
- * R.styleable.ButtonView_strokeWidth 外围线框的宽度，默认为1px
- * <p>
- * R.styleable.ButtonView_backgroundDrawableEntries 背景图集合，图片随state变化，遵循“点击顺序”
- * <p>
- * R.styleable.ButtonView_textColorEntries 文字颜色集合，颜色随state变化，遵循“点击顺序”
- * <p>
- * R.styleable.ButtonView_compoundIcon 附带的静态图片，不随state变化，
- * <p>
- * R.styleable.ButtonView_compoundIconWidth 附带图片的宽度，默认情况下，图文呈竖直方向时约等于文本宽度，水平方向时随高度等比缩放
- * <p>
- * R.styleable.ButtonView_compoundIconHeight 附带图片的高度，默认情况下，图片呈水平方向时约等于文本行高，竖直方向时随宽度等比缩放
- * <p>
- * R.styleable.ButtonView_compoundIconEntries 附带的图片集，随state变化，遵循“点击顺序”
- * <p>
- * R.styleable.ButtonView_compoundIconGravity 附带图片的位置，只有左、上、右、下四种位置，默认为左
- * <p>
- * R.styleable.ButtonView_compoundPadding 附带图片与文字的间隔
+ * Created by Yun on 2017/9/7.
  */
-
 
 public class ButtonView extends AppCompatButton {
 
-    static final int SHAPE_RECTANGLE = 1;
-    static final int SHAPE_CIRCLE = 2;
-    static final int SHAPE_CIRCLE_RECT = 3;
-    private static final int HORIZONTAL = 0;
-    private static final int VERTICAL = 1;
-    private ButtonShape mButtonShape;
-    private ResourcesHelper mResourcesHelper;
-    private Drawable[] mCompoundDrawables;
-    private Drawable mCompoundDrawable;
     private int mCompoundDrawableWidth;
     private int mCompoundDrawableHeight;
-    private int mCompoundOrientation;
-    private Drawable mBackgroundDrawable;
+    private int mCompoundDrawableGravity;
+    private ResourcesHelper mResourceHelper;
+    private BackgroundShape mBackgroundShape;
+    private int mCornerRadius;
+    private int[] mSolidColor;
+    private int mStrokeWidth;
+    private int[] mStrokeColor;
 
     public ButtonView(Context context) {
         this(context, null);
@@ -83,337 +42,194 @@ public class ButtonView extends AppCompatButton {
         super(context, attrs, defStyleAttr);
         setClickable(true);
         setMinHeight(0);
-        mBackgroundDrawable = getBackground();
-        mResourcesHelper = new ResourcesHelper(context);
+        mResourceHelper = new ResourcesHelper(context);
+        Drawable compoundDrawable = null;
+
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonView, defStyleAttr, 0);
-        if (mBackgroundDrawable == null) {
-            setBackgroundWithDrawables(typedArray);
+        for (int i = 0; i < typedArray.getIndexCount(); i++) {
+            int attr = typedArray.getIndex(i);
+            if (attr == R.styleable.ButtonView_shape) {
+                int shapeFlag = typedArray.getInt(attr, 0);
+                mBackgroundShape = getShape(shapeFlag);
+            } else if (attr == R.styleable.ButtonView_cornerRadius) {
+                mCornerRadius = typedArray.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.ButtonView_solidColor) {
+                mSolidColor = new int[]{typedArray.getColor(attr, 0)};
+            } else if (attr == R.styleable.ButtonView_solidColorEntries) {
+                int solidColorArrayId = typedArray.getResourceId(attr, 0);
+                mSolidColor = mResourceHelper.getColorArray(solidColorArrayId);
+            } else if (attr == R.styleable.ButtonView_strokeWidth) {
+                mStrokeWidth = typedArray.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.ButtonView_strokeColor) {
+                mStrokeColor = new int[]{typedArray.getColor(attr, 0)};
+            } else if (attr == R.styleable.ButtonView_strokeColorEntries) {
+                int strokeColorArrayId = typedArray.getResourceId(attr, 0);
+                mStrokeColor = mResourceHelper.getColorArray(strokeColorArrayId);
+            } else if (attr == R.styleable.ButtonView_backgroundDrawableEntries) {
+                int backgroundDrawableArrayId = typedArray.getResourceId(attr, 0);
+                Drawable[] drawables = mResourceHelper.getDrawableArray(backgroundDrawableArrayId);
+                ViewCompat.setBackground(this, SelectorFactory.createDrawableSelector(drawables));
+            } else if (attr == R.styleable.ButtonView_textColorEntries) {
+                int textColorArrayId = typedArray.getResourceId(attr, 0);
+                int[] colorArray = mResourceHelper.getColorArray(textColorArrayId);
+                setTextColor(SelectorFactory.createColorSelector(colorArray));
+            } else if (attr == R.styleable.ButtonView_compoundDrawable) {
+                compoundDrawable = typedArray.getDrawable(attr);
+            } else if (attr == R.styleable.ButtonView_compoundDrawableWidth) {
+                mCompoundDrawableWidth = typedArray.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.ButtonView_compoundDrawableHeight) {
+                mCompoundDrawableHeight = typedArray.getDimensionPixelSize(attr, 0);
+            } else if (attr == R.styleable.ButtonView_compoundDrawableEntries) {
+                int arrayId = typedArray.getResourceId(attr, 0);
+                Drawable[] drawables = mResourceHelper.getDrawableArray(arrayId);
+                compoundDrawable = SelectorFactory.createDrawableSelector(drawables);
+            } else if (attr == R.styleable.ButtonView_compoundDrawableGravity) {
+                mCompoundDrawableGravity = getCompoundDrawableGravity(typedArray.getInt(attr, 0));
+            } else if (attr == R.styleable.ButtonView_compoundPadding) {
+                int compoundPadding = typedArray.getDimensionPixelSize(attr, 0);
+                setCompoundDrawablePadding(compoundPadding);
+            }
         }
-        if (mBackgroundDrawable == null) {
-            setBackgroundWithShape(typedArray);
-        }
-        setCompoundDrawables(typedArray);
-        setTextColors(typedArray);
         typedArray.recycle();
+        if (getBackground() == null && mBackgroundShape != null) {
+            setBackgroundShape(mBackgroundShape, mSolidColor);
+        }
+        if (compoundDrawable != null) {
+            setCompoundDrawable(compoundDrawable);
+        }
+
     }
 
-    private void setBackgroundWithDrawables(TypedArray typedArray) {
-        int drawableArrayId = typedArray.getResourceId(R.styleable.ButtonView_backgroundDrawableEntries, NULL);
-        if (drawableArrayId != NULL) {
-            setBackgroundSelector(mResourcesHelper.getDrawablesFromArray(drawableArrayId));
+    private int getColor(int[] colors, int index) {
+        if (colors == null || index >= colors.length) {
+            return 0;
         }
+        return colors[index];
     }
 
-    /**
-     * @param backgroundDrawables 背景图，最多不能超过3个,依次为state_normal,state_pressed,state_selected
-     */
-    public ButtonView setBackgroundSelector(Drawable... backgroundDrawables) {
-        if (backgroundDrawables.length > 3) {
-            throw new IllegalArgumentException("backgroundDrawables 最多不能超过3个");
-        }
-        mBackgroundDrawable = SelectorFactory.createDrawableSelector(backgroundDrawables);
-        ViewCompat.setBackground(this, mBackgroundDrawable);
+    public ButtonView setCornerRadius(int cornerRadius) {
+        mCornerRadius = cornerRadius;
         return this;
     }
 
-    /**
-     * @param drawableRes 背景图的资源id，最多不能超过3个,依次为state_normal,state_pressed,state_selected
-     */
-    public ButtonView setBackgroundSelector(@DrawableRes int... drawableRes) {
-        return setBackgroundSelector(mResourcesHelper.getDrawables(drawableRes));
+    public ButtonView setStrokeWidth(int strokeWidth) {
+        mStrokeWidth = strokeWidth;
+        return this;
     }
 
-    private void setBackgroundWithShape(TypedArray typedArray) {
-        int strokeWidth = (int) typedArray.getDimension(R.styleable.ButtonView_strokeWidth, 3);
-        int radius = typedArray.getDimensionPixelSize(R.styleable.ButtonView_cornerRadius, 0);
-        ShapeSelector selector = new ShapeSelector(getShape(typedArray))
-                .setRadius(radius)
-                .setSolidColors(getSolidColors(typedArray))
-                .setStrokeWidth(strokeWidth)
-                .setStrokeColors(getStrokeColors(typedArray));
-        setBackgroundSelector(selector);
+    public ButtonView setStrokeColor(int[] strokeColor) {
+        mStrokeColor = strokeColor;
+        return this;
     }
 
-    /**
-     * @param selector 基于Shape的Selector
-     */
-    public void setBackgroundSelector(ShapeSelector selector) {
-        mButtonShape = selector.mButtonShape;
-        int strokeWidth = selector.mStrokeWidth;
-        int[] strokeColors = selector.mStrokeColors;
-        int[] solidColors = selector.mSolidColors;
-        ShapeDrawable[] drawables = new ShapeDrawable[solidColors.length];
-        for (int i = 0; i < solidColors.length; i++) {
-            switch (selector.mButtonShape) {
+    public ButtonView setBackgroundShape(BackgroundShape backgroundShape, int[] solidColors) {
+        if (solidColors == null) {
+            solidColors = new int[]{Color.LTGRAY};
+        }
+        int len = Math.max(solidColors.length, mStrokeColor != null ? mStrokeColor.length : 0);
+        Drawable[] drawables = new Drawable[len];
+        for (int i = 0; i < len; i++) {
+            int solidColor = getColor(solidColors, i);
+            int strokeColor = getColor(mStrokeColor, i);
+            switch (backgroundShape) {
                 case CIRCLE:
-                    drawables[i] = ShapeDrawableFactory.createCircle(solidColors[i], strokeWidth, strokeColors[i]);
+                    drawables[i] = ShapeDrawableFactory.createCircle(solidColor, mStrokeWidth, strokeColor);
                     break;
                 case CIRCLE_RECT:
-                    drawables[i] = ShapeDrawableFactory.createCircleRect(solidColors[i], strokeWidth, strokeColors[i]);
+                    drawables[i] = ShapeDrawableFactory.createCircleRect(solidColor, mStrokeWidth, strokeColor);
                     break;
                 default:
-                    drawables[i] = ShapeDrawableFactory.createRoundRect(selector.mRadius, solidColors[i], strokeWidth, strokeColors[i]);
+                    drawables[i] = ShapeDrawableFactory.createRoundRect(mCornerRadius, solidColor, mStrokeWidth, strokeColor);
                     break;
             }
         }
-        mBackgroundDrawable = SelectorFactory.createDrawableSelector(drawables);
-        ViewCompat.setBackground(this, mBackgroundDrawable);
-    }
-
-    private ButtonShape getShape(TypedArray typedArray) {
-        int shapeValue = typedArray.getInt(R.styleable.ButtonView_shape, NULL);
-        switch (shapeValue) {
-            case SHAPE_CIRCLE_RECT:
-                return ButtonShape.CIRCLE_RECT;
-            case SHAPE_CIRCLE:
-                return ButtonShape.CIRCLE;
-            default:
-                return ButtonShape.RECTANGLE;
-        }
-
-    }
-
-    private int[] getSolidColors(TypedArray typedArray) {
-        int[] colors;
-        int arrayId = typedArray.getResourceId(R.styleable.ButtonView_solidColorEntries, NULL);
-        if (arrayId != NULL) {
-            colors = mResourcesHelper.getColorsFromArray(arrayId);
-        } else {
-            int color = typedArray.getColor(R.styleable.ButtonView_solidColor, Color.LTGRAY);
-            colors = new int[]{color, color, color};
-        }
-        return colors;
-    }
-
-    private int[] getStrokeColors(TypedArray typedArray) {
-        int[] colors = null;
-        int arrayId = typedArray.getResourceId(R.styleable.ButtonView_strokeColorEntries, NULL);
-        if (arrayId != NULL) {
-            colors = mResourcesHelper.getColorsFromArray(arrayId);
-        } else {
-            int color = typedArray.getColor(R.styleable.ButtonView_strokeColor, NULL);
-            if (color != NULL) {
-                colors = new int[]{color, color, color};
-            }
-        }
-        return colors;
-    }
-
-    private void setTextColors(TypedArray typedArray) {
-        int textColorArrayId = typedArray.getResourceId(R.styleable.ButtonView_textColorEntries, NULL);
-        if (textColorArrayId != NULL) {
-            setTextColors(mResourcesHelper.getColorsFromArray(textColorArrayId));
-        }
-    }
-
-    /**
-     * 设置字体颜色的Selector
-     * @param color 颜色集，最多3个元素，依次为state_normal,state_pressed,state_selected
-     */
-    public ButtonView setTextColors(@NonNull int... color) {
-        setTextColor(SelectorFactory.createColorSelector(color));
+        ViewCompat.setBackground(this, SelectorFactory.createDrawableSelector(drawables));
         return this;
     }
 
-    private void setCompoundDrawables(TypedArray typedArray) {
-        int arrayId = typedArray.getResourceId(R.styleable.ButtonView_compoundIconEntries, NULL);
-        Drawable compoundIcon = typedArray.getDrawable(R.styleable.ButtonView_compoundIcon);
-        if (arrayId == NULL && compoundIcon == null) {
-            return;
+
+    private BackgroundShape getShape(int shapeFlag) {
+        switch (shapeFlag) {
+            case 2:
+                return BackgroundShape.CIRCLE;
+            case 3:
+                return BackgroundShape.CIRCLE_RECT;
+            default:
+                return BackgroundShape.RECTANGLE;
         }
-        int gravity = typedArray.getInt(R.styleable.ButtonView_compoundIconGravity, 0);
-        int compoundPadding = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundPadding, 0);
-        int width = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconWidth, 0);
-        int height = typedArray.getDimensionPixelSize(R.styleable.ButtonView_compoundIconHeight, 0);
-        CompoundSelector selector = new CompoundSelector(gravity)
-                .setPadding(compoundPadding)
-                .setWidth(width)
-                .setHeight(height);
-        if (arrayId != NULL) {
-            selector.setDrawables(mResourcesHelper.getDrawablesFromArray(arrayId));
-            setCompoundSelector(selector);
-            return;
-        }
-        selector.setDrawables(compoundIcon);
-        setCompoundSelector(selector);
     }
 
-    /**
-     * 设置附属的drawable
-     * @param selector 通过CompoundSelector可以设置drawableLeft,drawableTop,drawableRight或drawableBottom
-     */
-    public ButtonView setCompoundSelector(CompoundSelector selector) {
-        setCompoundDrawablePadding(selector.mPadding);
-        mCompoundDrawable = selector.mDrawable;
-        mCompoundDrawableHeight = selector.mHeight;
-        mCompoundDrawableWidth = selector.mWidth;
-        mCompoundDrawables = new Drawable[4];
-        switch (selector.mGravity) {
-            case 1:// top
-            case Gravity.TOP:
-                mCompoundDrawables[1] = mCompoundDrawable;
-                mCompoundOrientation = VERTICAL;
-                break;
+    private int getCompoundDrawableGravity(int gravityFlag) {
+        switch (gravityFlag) {
+            case 1://top
+                return Gravity.TOP;
             case 2://right
-            case Gravity.END:
-            case Gravity.RIGHT:
-                mCompoundDrawables[2] = mCompoundDrawable;
-                mCompoundOrientation = HORIZONTAL;
-                break;
+                return Gravity.RIGHT;
             case 3://bottom
+                return Gravity.BOTTOM;
+            default://left
+                return Gravity.LEFT;
+        }
+    }
+
+    public void setCompoundDrawable(Drawable compoundDrawable) {
+        boolean isHorizontal = true;
+        Drawable[] drawables = new Drawable[4];
+        switch (mCompoundDrawableGravity) {
+            case Gravity.TOP:
+                drawables[1] = compoundDrawable;
+                isHorizontal = false;
+                break;
+            case Gravity.RIGHT:
+                drawables[2] = compoundDrawable;
+                break;
             case Gravity.BOTTOM:
-                mCompoundDrawables[3] = mCompoundDrawable;
-                mCompoundOrientation = VERTICAL;
+                drawables[3] = compoundDrawable;
+                isHorizontal = false;
                 break;
             default:
-                mCompoundDrawables[0] = mCompoundDrawable;
-                mCompoundOrientation = HORIZONTAL;
+                drawables[0] = compoundDrawable;
                 break;
         }
-        return this;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (mButtonShape == ButtonShape.CIRCLE) {
-            int diameter = Math.max(getMeasuredWidth(), getMeasuredHeight());
-            setMeasuredDimension(diameter, diameter);
-        }
-        if (mCompoundDrawable != null) {
-            if (mCompoundDrawableWidth == 0 || mCompoundDrawableHeight == 0) {
-                if (mCompoundOrientation == HORIZONTAL) {
-                    mCompoundDrawableHeight = getLineHeight();
-                    float scale = mCompoundDrawableHeight * 1.0f / mCompoundDrawable.getIntrinsicHeight();
-                    mCompoundDrawableWidth = (int) (scale * mCompoundDrawable.getIntrinsicWidth());
-                } else {
-                    mCompoundDrawableWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-                    float scale = mCompoundDrawableWidth * 1.0f / mCompoundDrawable.getIntrinsicWidth();
-                    mCompoundDrawableHeight = (int) (scale * mCompoundDrawable.getIntrinsicHeight());
-                }
-            }
-            mCompoundDrawable.setBounds(0, 0, mCompoundDrawableWidth, mCompoundDrawableHeight);
-        }
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mCompoundDrawables != null) {
-            setCompoundDrawables(mCompoundDrawables[0], mCompoundDrawables[1], mCompoundDrawables[2], mCompoundDrawables[3]);
-        }
-    }
-
-    public static class ShapeSelector {
-        private ButtonShape mButtonShape;
-        private int mRadius;
-        private int[] mSolidColors;
-        private int mStrokeWidth;
-        private int[] mStrokeColors;
-
-        public ShapeSelector(ButtonShape buttonShape) {
-            mButtonShape = buttonShape;
-        }
-
-        /**
-         * ButtonShape为Rectangle时，表示其圆角，其他形状时，设置此项无效
-         * @param radius 圆角值，单位Px
-         */
-        public ShapeSelector setRadius(int radius) {
-            mRadius = radius;
-            return this;
-        }
-
-        /**
-         * @param solidColors solid部分的颜色集，最多3个元素，依次为state_normal,state_pressed,state_selected
-         */
-        public ShapeSelector setSolidColors(int[] solidColors) {
-            mSolidColors = decorateColors(solidColors, Color.TRANSPARENT);
-            return this;
-        }
-
-        /**
-         * @param strokeWidth stroke的宽度值，设置此值后Shape外围会有一个stroke边
-         */
-        public ShapeSelector setStrokeWidth(int strokeWidth) {
-            mStrokeWidth = strokeWidth;
-            return this;
-        }
-
-        /**
-         * @param strokeColors stroke的颜色集，最多三个元素，依次为state_normal,state_pressed,state_selected
-         */
-        public ShapeSelector setStrokeColors(int[] strokeColors) {
-            mStrokeColors = decorateColors(strokeColors, NULL);
-            return this;
-        }
-
-        private int[] decorateColors(int[] colors, int defaultColor) {
-            if (colors == null || colors.length == 0) {
-                return new int[]{defaultColor, defaultColor, defaultColor};
-            }
-            switch (colors.length) {
-                case 1:
-                    defaultColor = colors[0];
-                    return new int[]{defaultColor, defaultColor, defaultColor};
-                case 2:
-                    return new int[]{colors[0], colors[1], colors[0]};
-                case 3:
-                    return colors;
-                default:
-                    throw new IllegalArgumentException("颜色值不能超过3个");
+        if (mCompoundDrawableWidth == 0 || mCompoundDrawableHeight == 0) {
+            float ratio = compoundDrawable.getIntrinsicWidth() * 1f / compoundDrawable.getIntrinsicHeight();
+            if (isHorizontal) {
+                mCompoundDrawableHeight = (int) getTextSize();
+                mCompoundDrawableWidth = (int) (mCompoundDrawableHeight * ratio);
+            } else {
+                mCompoundDrawableWidth = (int) Layout.getDesiredWidth(getText(), getPaint());
+                mCompoundDrawableHeight = (int) (mCompoundDrawableWidth / ratio);
             }
         }
+        compoundDrawable.setBounds(0, 0, mCompoundDrawableWidth, mCompoundDrawableHeight);
+        setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
     }
 
-    public static class CompoundSelector {
-        private int mGravity;
-        private int mPadding;
-        private Drawable mDrawable;
-        private int mWidth;
-        private int mHeight;
-
-        /**
-         * @param gravity compoundDrawable的位置，Gravity.LEFT,Gravity.TOP,Gravity.RIGHT 或Gravity.BOTTOM
-         */
-        public CompoundSelector(int gravity) {
-            mGravity = gravity;
-        }
-
-        /**
-         * @param drawables compoundDrawable集，最多3个元素，依次为state_normal,state_pressed,state_selected
-         */
-        public CompoundSelector setDrawables(Drawable... drawables) {
-            mDrawable = SelectorFactory.createDrawableSelector(drawables);
-            return this;
-        }
-
-        /**
-         * 设置图文间距
-         * @param padding 图文间距，单位px
-         */
-        public CompoundSelector setPadding(int padding) {
-            mPadding = padding;
-            return this;
-        }
-
-        /**
-         * 设置compoundDrawable的宽度；默认为0，gravity为top或bottom时与文本等宽,否则根据要显示的高度缩放而来；
-         * @param width compoundDrawable的显示宽度，单位px
-         */
-        public CompoundSelector setWidth(int width) {
-            mWidth = width;
-            return this;
-        }
-
-        /**
-         * 设置compoundDrawable的高度；默认为0，gravity为left或right时，与文本等高，否则根据要显示的宽度缩放而来
-         * @param height compoundDrawable的显示高度，单位px
-         */
-        public CompoundSelector setHeight(int height) {
-            mHeight = height;
-            return this;
-        }
+    public void setCompoundDrawableWidth(int compoundDrawableWidth) {
+        mCompoundDrawableWidth = compoundDrawableWidth;
     }
 
+    public void setCompoundDrawableHeight(int compoundDrawableHeight) {
+        mCompoundDrawableHeight = compoundDrawableHeight;
+    }
+
+    public void setCompoundDrawableGravity(int gravity) {
+        mCompoundDrawableGravity = gravity;
+    }
+
+    public static enum BackgroundShape {
+
+        RECTANGLE(1), CIRCLE(2), CIRCLE_RECT(3);
+
+        private int value;
+
+        BackgroundShape(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
 }

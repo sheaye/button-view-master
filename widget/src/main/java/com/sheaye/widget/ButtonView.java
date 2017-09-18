@@ -27,7 +27,7 @@ public class ButtonView extends AppCompatButton {
     private BackgroundShape mBackgroundShape;
     private int mCornerRadius;
     private int[] mSolidColor;
-    private int mStrokeWidth;
+    private int mStrokeWidth = 2;
     private int[] mStrokeColor;
 
     public ButtonView(Context context) {
@@ -59,7 +59,7 @@ public class ButtonView extends AppCompatButton {
                 int solidColorArrayId = typedArray.getResourceId(attr, 0);
                 mSolidColor = mResourceHelper.getColorArray(solidColorArrayId);
             } else if (attr == R.styleable.ButtonView_strokeWidth) {
-                mStrokeWidth = typedArray.getDimensionPixelSize(attr, 0);
+                mStrokeWidth = typedArray.getDimensionPixelSize(attr, 2);
             } else if (attr == R.styleable.ButtonView_strokeColor) {
                 mStrokeColor = new int[]{typedArray.getColor(attr, 0)};
             } else if (attr == R.styleable.ButtonView_strokeColorEntries) {
